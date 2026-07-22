@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Iqra University — Complaint Management Portal</title>
-  <meta name="description" content="Iqra University Chak Shahzad Campus — Student Complaint Management System. Submit, track and manage complaints online.">
+  <title>Iqra University Chak Shahzad — Student Complaints (Unofficial)</title>
+  <meta name="description" content="Independent, student-run complaint board inspired by Iqra University Chak Shahzad Campus. Submit, track, and publicly view complaints.">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
@@ -29,6 +29,18 @@
       color: var(--iu-text);
       min-height: 100vh;
     }
+
+    /* ===================== DISCLAIMER BAR ===================== */
+    .disclaimer-bar {
+      background: linear-gradient(90deg, #6C3483, #7D3C98);
+      color: white;
+      font-size: 12.5px;
+      font-weight: 600;
+      text-align: center;
+      padding: 8px 16px;
+      line-height: 1.5;
+    }
+    .disclaimer-bar strong { text-decoration: underline; }
 
     /* ===================== HEADER ===================== */
     .iu-header {
@@ -341,6 +353,20 @@
     textarea.form-control { resize: vertical; min-height: 120px; }
 
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+
+    .checkbox-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: #F8FAFC;
+      border: 1px solid #E8ECF0;
+      border-radius: 9px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+    }
+    .checkbox-row input[type="checkbox"] { margin-top: 3px; width: 16px; height: 16px; flex-shrink: 0; cursor: pointer; }
+    .checkbox-row label { font-size: 13px; color: var(--iu-text); line-height: 1.5; cursor: pointer; }
+    .checkbox-row label strong { color: var(--iu-navy); }
 
     /* ===================== STAT CARDS ===================== */
     .stats-grid {
@@ -699,6 +725,31 @@
       margin-left: 8px;
     }
 
+    /* ===================== PUBLIC BOARD ===================== */
+    .board-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 18px;
+    }
+    .board-card {
+      background: white;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      border: 1px solid #E8ECF0;
+      border-left: 4px solid var(--iu-blue);
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+    .board-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+    .board-card .board-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+    .board-card .board-ticket { font-size: 11px; font-family: 'Courier New', monospace; color: #95A5A6; font-weight: 700; }
+    .board-card h4 { font-size: 15px; font-weight: 700; color: var(--iu-navy); margin-bottom: 8px; line-height: 1.4; }
+    .board-card .board-desc { font-size: 13px; color: #7F8C8D; line-height: 1.6; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .board-card .board-meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 11.5px; color: #95A5A6; }
+    .board-card .board-meta strong { color: var(--iu-dark); }
+    .board-empty { text-align:center; padding: 50px 20px; color: #95A5A6; }
+
     /* ===================== RESPONSIVE ===================== */
     @media (max-width: 768px) {
       .admin-layout { flex-direction: column; }
@@ -765,17 +816,21 @@
 
 <!-- ============================= HEADER ============================= -->
 <header class="iu-header" id="mainHeader">
+  <div class="disclaimer-bar">
+    ⚠️ <strong>Independent student project</strong> — built and run by a student, not by Iqra University's administration or IT department. Not an official university system.
+  </div>
   <div class="iu-header-top">
     <div class="iu-logo-section" onclick="navigate('home')">
       <div class="iu-logo-icon">IU</div>
       <div class="iu-logo-text">
         <h1>Iqra University</h1>
-        <p>Chak Shahzad Campus &mdash; Islamabad</p>
+        <p>Chak Shahzad Campus &mdash; Student Complaints (Unofficial)</p>
       </div>
     </div>
     <nav class="iu-nav">
       <a id="nav-home" class="active" onclick="navigate('home')">🏠 Home</a>
       <a id="nav-submit" class="btn-submit" onclick="navigate('submit')">📝 Submit Complaint</a>
+      <a id="nav-board" onclick="navigate('board')">📢 Public Board</a>
       <a id="nav-track" onclick="navigate('track')">🔍 Track Status</a>
       <a id="nav-admin" onclick="navigate('admin')">🔐 Admin</a>
     </nav>
@@ -786,11 +841,12 @@
 <div id="page-home" class="page active">
   <div class="iu-hero">
     <div class="iu-hero-content animate-in">
-      <div class="iu-badge">Student Complaint Portal</div>
-      <h2>Voice Your Concerns,<br>We'll Take Action</h2>
-      <p>Submit and track your complaints at Iqra University Chak Shahzad Campus. All complaints are handled professionally and stored securely.</p>
+      <div class="iu-badge">Student-Run · Not Affiliated With University Admin</div>
+      <h2>Voice Your Concerns,<br>Make Them Impossible to Ignore</h2>
+      <p>Submit a complaint, track it with a private ticket ID, and — if you choose — let it appear on the public board where every student can see it. Real pressure comes from visibility.</p>
       <div class="hero-btns">
         <button class="btn btn-primary-iu" onclick="navigate('submit')">📝 Submit a Complaint</button>
+        <button class="btn btn-outline-white" onclick="navigate('board')">📢 View Public Board</button>
         <button class="btn btn-outline-white" onclick="navigate('track')">🔍 Track My Complaint</button>
       </div>
     </div>
@@ -801,26 +857,20 @@
       <div class="info-item">
         <div class="icon">📝</div>
         <h3>Submit Complaint</h3>
-        <p>Fill out the complaint form with your details, category, and description. We accept all types of campus-related concerns.</p>
+        <p>Fill out the complaint form with your details, category, and description. Choose whether it goes on the public board.</p>
         <button class="action-btn" onclick="navigate('submit')">Submit Now →</button>
+      </div>
+      <div class="info-item">
+        <div class="icon">📢</div>
+        <h3>Public Board</h3>
+        <p>Browse complaints other students chose to make public. Names and contact details stay hidden unless the student opted to share them.</p>
+        <button class="action-btn" onclick="navigate('board')">View Board →</button>
       </div>
       <div class="info-item">
         <div class="icon">🔍</div>
         <h3>Track Status</h3>
         <p>Use your unique Ticket ID received after submission to check the real-time status of your complaint.</p>
         <button class="action-btn" onclick="navigate('track')">Track Complaint →</button>
-      </div>
-      <div class="info-item">
-        <div class="icon">⏱️</div>
-        <h3>Quick Resolution</h3>
-        <p>Our admin team reviews complaints within 3–5 working days. High-priority cases are handled urgently.</p>
-        <button class="action-btn" onclick="navigate('admin')">Admin Panel →</button>
-      </div>
-      <div class="info-item">
-        <div class="icon">💾</div>
-        <h3>PC Storage Enabled</h3>
-        <p>Complaints are stored in SQLite database on your local PC storage (`complaints.db`).</p>
-        <button class="action-btn" onclick="navigate('submit')">Learn More →</button>
       </div>
     </div>
 
@@ -843,6 +893,10 @@
 <div id="page-submit" class="page">
   <div class="container" style="padding-top:40px;padding-bottom:60px;">
     <div class="section-title">📝 Submit a Complaint</div>
+
+    <div class="alert alert-info">
+      ℹ️ Please describe the <strong>issue, process, or department</strong> involved rather than making personal accusations against a named individual. This keeps the focus on fixing problems and protects you and others from disputes over unverified claims.
+    </div>
 
     <div id="submitAlert" style="display:none;"></div>
 
@@ -936,12 +990,24 @@
       </div>
       <div class="form-group">
         <label class="form-label" for="c_desc">Detailed Description <span class="required">*</span></label>
-        <textarea id="c_desc" class="form-control" placeholder="Describe your complaint in detail. Include dates, people involved, and any relevant information..." maxlength="2000" oninput="updateCharCount(this,'descCount',2000)"></textarea>
+        <textarea id="c_desc" class="form-control" placeholder="Describe your complaint in detail. Include dates and relevant information..." maxlength="2000" oninput="updateCharCount(this,'descCount',2000)"></textarea>
         <span class="char-count" id="descCount">0/2000</span>
       </div>
       <div class="form-group">
         <label class="form-label" for="c_desired">Desired Resolution</label>
         <input type="text" id="c_desired" class="form-control" placeholder="What outcome are you hoping for?" maxlength="300">
+      </div>
+    </div>
+
+    <div class="card animate-in" style="margin-top:20px;">
+      <div class="card-title">📢 Public Visibility</div>
+      <div class="checkbox-row">
+        <input type="checkbox" id="s_public_visible" checked>
+        <label for="s_public_visible"><strong>Show this complaint on the Public Board</strong> so other students can see it too. Your name, email, phone, and student ID are always hidden from the public board unless you opt in below.</label>
+      </div>
+      <div class="checkbox-row">
+        <input type="checkbox" id="s_show_name">
+        <label for="s_show_name"><strong>Display my name publicly</strong> alongside this complaint on the board (optional — leave unchecked to stay anonymous to other students).</label>
       </div>
     </div>
 
@@ -969,6 +1035,63 @@
     <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
       <button class="btn btn-blue" onclick="closeSuccessModal()">Done</button>
       <button class="btn btn-outline" onclick="goTrack()">🔍 Track This Complaint</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================= PUBLIC BOARD PAGE ============================= -->
+<div id="page-board" class="page">
+  <div class="container" style="padding-top:40px;padding-bottom:60px;">
+    <div class="section-title">📢 Public Complaints Board</div>
+    <div class="alert alert-info">
+      ℹ️ These are complaints students chose to make public. Personal contact details are never shown here.
+    </div>
+
+    <div class="filter-bar">
+      <input type="text" id="boardSearch" placeholder="🔍 Search title or description..." oninput="renderPublicBoard()">
+      <select id="boardStatusFilter" onchange="renderPublicBoard()">
+        <option value="All">All Statuses</option>
+        <option>Pending</option>
+        <option>In Review</option>
+        <option>Resolved</option>
+        <option>Rejected</option>
+      </select>
+      <select id="boardCatFilter" onchange="renderPublicBoard()">
+        <option value="All">All Categories</option>
+        <option>Academic Issues</option>
+        <option>Faculty / Teaching</option>
+        <option>Administration</option>
+        <option>Hostel / Accommodation</option>
+        <option>Facilities &amp; Infrastructure</option>
+        <option>IT &amp; Technology</option>
+        <option>Transport</option>
+        <option>Financial / Fee Related</option>
+        <option>Student Affairs</option>
+        <option>Harassment / Misconduct</option>
+        <option>Library</option>
+        <option>Cafeteria / Food</option>
+        <option>Other</option>
+      </select>
+      <button class="btn btn-outline btn-sm" onclick="renderPublicBoard()">🔄 Refresh</button>
+    </div>
+
+    <div class="board-grid" id="boardGrid"></div>
+  </div>
+</div>
+
+<!-- ============================= BOARD DETAIL MODAL (read-only) ============================= -->
+<div class="modal-overlay" id="boardDetailModal">
+  <div class="modal" style="max-width:600px;">
+    <button class="modal-close" onclick="closeBoardDetail()">✕</button>
+    <h3 style="font-size:17px;font-weight:800;color:var(--iu-navy);margin-bottom:18px;padding-right:36px;" id="boardModalTitle">Complaint</h3>
+    <div id="boardModalMeta" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;"></div>
+    <div style="margin-bottom:10px;">
+      <p style="font-size:11px;color:#95A5A6;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px;">Description</p>
+      <p id="boardModalDesc" style="background:#F8FAFC;padding:14px;border-radius:9px;border-left:3px solid var(--iu-blue);line-height:1.75;font-size:14px;"></p>
+    </div>
+    <div id="boardModalNotesWrap" style="display:none;margin-top:14px;">
+      <p style="font-size:11px;color:#95A5A6;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px;">Official Response</p>
+      <p id="boardModalNotes" style="background:#EAFAF1;padding:14px;border-radius:9px;border-left:3px solid var(--iu-green);line-height:1.75;font-size:14px;color:#196F3D;"></p>
     </div>
   </div>
 </div>
@@ -1142,6 +1265,7 @@
                   <th>Title</th>
                   <th>Status</th>
                   <th>Priority</th>
+                  <th>Public?</th>
                   <th>Date</th>
                   <th>Action</th>
                 </tr>
@@ -1227,6 +1351,11 @@
       </div>
     </div>
 
+    <div class="checkbox-row">
+      <input type="checkbox" id="updatePublicVisible">
+      <label for="updatePublicVisible"><strong>Visible on Public Board.</strong> Uncheck to remove/hide this complaint from public view (e.g. spam, abuse, or a false claim) while keeping it in the system.</label>
+    </div>
+
     <div class="form-group" style="margin-bottom:18px;">
       <label class="form-label">Admin Notes / Response</label>
       <textarea class="form-control" id="updateNotes" placeholder="Enter your response or internal notes..." style="min-height:90px;"></textarea>
@@ -1246,9 +1375,9 @@
 
 <!-- ============================= FOOTER ============================= -->
 <footer class="iu-footer">
-  <p>🎓 <strong>Iqra University</strong> &mdash; Chak Shahzad Campus, No.6 Park Road, Islamabad</p>
-  <p>Complaint Portal &copy; 2026 &mdash; All complaints are handled confidentially</p>
-  <p id="footerStorageMode" style="margin-top:8px;font-size:12px;opacity:0.6;">💾 Connected to PC Storage (`complaints.db` SQLite)</p>
+  <p>🎓 <strong>Independent Student Project</strong> — inspired by Iqra University, Chak Shahzad Campus, Islamabad</p>
+  <p>Not operated by or affiliated with Iqra University's administration. Complaint Portal &copy; 2026</p>
+  <p id="footerStorageMode" style="margin-top:8px;font-size:12px;opacity:0.6;">💾 Connected to PC Storage (complaints.db SQLite)</p>
 </footer>
 
 <!-- ============================= JAVASCRIPT ============================= -->
@@ -1258,13 +1387,11 @@
   const ADMIN_KEY = 'iuAdminCreds';
   const SESSION_KEY = 'iuAdminSession';
 
-  // Helper for localStorage fallback
   function getLocalDB() {
     try { return JSON.parse(localStorage.getItem(DB_KEY)) || []; } catch(e) { return []; }
   }
   function saveLocalDB(data) { localStorage.setItem(DB_KEY, JSON.stringify(data)); }
 
-  // Check Backend Server Availability
   async function checkServer() {
     try {
       const res = await fetch('/api/stats');
@@ -1277,7 +1404,7 @@
         return true;
       }
     } catch(e) { }
-    
+
     isServerAvailable = false;
     const badge = document.getElementById('dbModeBadge');
     badge.className = 'db-status-badge db-offline';
@@ -1290,7 +1417,6 @@
     return sessionStorage.getItem(SESSION_KEY) === 'true';
   }
 
-  // Navigation
   let currentPage = 'home';
   function navigate(page) {
     if (page === 'admin') {
@@ -1308,6 +1434,7 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
     if (page === 'home') updateHomeStats();
     if (page === 'admin') adminSection('dashboard');
+    if (page === 'board') renderPublicBoard();
   }
 
   function showPage(page) {
@@ -1322,7 +1449,6 @@
     if (navEl) navEl.classList.add('active');
   }
 
-  // Home Stats
   async function updateHomeStats() {
     await checkServer();
     if (isServerAvailable) {
@@ -1347,7 +1473,6 @@
     document.getElementById('homeResolved').textContent = db.filter(c => c.status === 'Resolved').length;
   }
 
-  // Submit Complaint
   function updateCharCount(el, counterId, max) {
     document.getElementById(counterId).textContent = el.value.length + '/' + max;
   }
@@ -1358,6 +1483,8 @@
     document.getElementById('c_priority').value = 'Medium';
     document.getElementById('descCount').textContent = '0/2000';
     document.getElementById('submitAlert').style.display = 'none';
+    document.getElementById('s_public_visible').checked = true;
+    document.getElementById('s_show_name').checked = false;
   }
 
   async function submitComplaint() {
@@ -1375,6 +1502,9 @@
       return;
     }
 
+    const publicVisible = document.getElementById('s_public_visible').checked;
+    const showName = document.getElementById('s_show_name').checked;
+
     const payload = {
       student_name: name,
       student_id: document.getElementById('s_id').value.trim(),
@@ -1386,7 +1516,9 @@
       priority: document.getElementById('c_priority').value || 'Medium',
       title: title,
       description: desc,
-      desired_resolution: document.getElementById('c_desired').value.trim()
+      desired_resolution: document.getElementById('c_desired').value.trim(),
+      public_visible: publicVisible,
+      show_name_publicly: showName
     };
 
     let generatedTicket = '';
@@ -1407,7 +1539,6 @@
     }
 
     if (!generatedTicket) {
-      // Local storage fallback
       const db = getLocalDB();
       generatedTicket = 'IUC-' + new Date().getFullYear() + String(db.length + 1).padStart(4, '0');
       db.push({
@@ -1453,7 +1584,6 @@
     });
   }
 
-  // Track Complaint
   async function trackComplaint() {
     const input = document.getElementById('trackInput').value.trim().toUpperCase();
     const errorEl = document.getElementById('trackError');
@@ -1492,7 +1622,6 @@
       return;
     }
 
-    // Render result
     document.getElementById('trackTicketId').textContent = complaint.ticket_id;
     document.getElementById('trackStatusBadge').innerHTML = getStatusBadge(complaint.status);
     updateProgressSteps(complaint.status);
@@ -1558,7 +1687,98 @@
     });
   }
 
-  // Admin Login
+  let allPublicComplaints = [];
+
+  async function renderPublicBoard() {
+    await checkServer();
+    const status = document.getElementById('boardStatusFilter').value;
+    const cat = document.getElementById('boardCatFilter').value;
+    const search = (document.getElementById('boardSearch').value || '').trim().toLowerCase();
+
+    let db = [];
+    if (isServerAvailable) {
+      try {
+        const params = new URLSearchParams();
+        params.set('public_only', 'true');
+        if (status !== 'All') params.set('status', status);
+        if (cat !== 'All') params.set('category', cat);
+        const res = await fetch('/api/public/complaints?' + params.toString());
+        if (res.ok) {
+          const json = await res.json();
+          if (json.success) db = json.complaints;
+        }
+      } catch(e){}
+    }
+
+    if (!db.length && !isServerAvailable) {
+      db = getLocalDB().filter(c => c.public_visible !== false);
+      if (status !== 'All') db = db.filter(c => c.status === status);
+      if (cat !== 'All') db = db.filter(c => c.category === cat);
+    }
+
+    if (search) {
+      db = db.filter(c =>
+        (c.title || '').toLowerCase().includes(search) ||
+        (c.description || '').toLowerCase().includes(search)
+      );
+    }
+
+    db = db.slice().sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+
+    allPublicComplaints = db;
+    const grid = document.getElementById('boardGrid');
+
+    if (!db.length) {
+      grid.innerHTML = '<div class="board-empty" style="grid-column:1/-1;">📭 No public complaints yet in this filter.</div>';
+      return;
+    }
+
+    grid.innerHTML = db.map(c => {
+      const who = c.show_name_publicly && c.student_name ? escapeHtml(c.student_name) : 'Anonymous Student';
+      return '<div class="board-card" onclick="openBoardDetail(\'' + c.ticket_id + '\')">' +
+        '<div class="board-top"><span class="board-ticket">' + c.ticket_id + '</span>' + getStatusBadge(c.status) + '</div>' +
+        '<h4>' + escapeHtml(c.title) + '</h4>' +
+        '<div class="board-desc">' + escapeHtml(c.description) + '</div>' +
+        '<div class="board-meta">' +
+        '<span><strong>' + escapeHtml(c.category) + '</strong></span>&nbsp;&middot;&nbsp;' +
+        '<span>' + escapeHtml(c.department || 'General') + '</span>&nbsp;&middot;&nbsp;' +
+        '<span>' + who + '</span>&nbsp;&middot;&nbsp;' +
+        '<span>' + formatDate(c.created_at) + '</span>' +
+        '</div></div>';
+    }).join('');
+  }
+
+  function openBoardDetail(ticketId) {
+    const c = allPublicComplaints.find(x => x.ticket_id === ticketId);
+    if (!c) return;
+    const who = c.show_name_publicly && c.student_name ? escapeHtml(c.student_name) : 'Anonymous Student';
+
+    document.getElementById('boardModalTitle').textContent = '📋 ' + c.title;
+    document.getElementById('boardModalMeta').innerHTML =
+      '<div class="modal-meta-item"><div class="lbl">Ticket ID</div><div class="val"><code>' + c.ticket_id + '</code></div></div>' +
+      '<div class="modal-meta-item"><div class="lbl">Submitted By</div><div class="val">' + who + '</div></div>' +
+      '<div class="modal-meta-item"><div class="lbl">Department</div><div class="val">' + escapeHtml(c.department || '—') + '</div></div>' +
+      '<div class="modal-meta-item"><div class="lbl">Category</div><div class="val">' + escapeHtml(c.category) + '</div></div>' +
+      '<div class="modal-meta-item"><div class="lbl">Submitted</div><div class="val">' + formatDate(c.created_at) + '</div></div>' +
+      '<div class="modal-meta-item"><div class="lbl">Status</div><div class="val">' + getStatusBadge(c.status) + '</div></div>';
+
+    document.getElementById('boardModalDesc').textContent = c.description;
+
+    const notesWrap = document.getElementById('boardModalNotesWrap');
+    if (c.admin_notes) {
+      document.getElementById('boardModalNotes').textContent = c.admin_notes;
+      notesWrap.style.display = 'block';
+    } else {
+      notesWrap.style.display = 'none';
+    }
+
+    document.getElementById('boardDetailModal').classList.add('active');
+  }
+
+  function closeBoardDetail() {
+    document.getElementById('boardDetailModal').classList.remove('active');
+  }
+
   async function adminLogin() {
     const user = document.getElementById('adminUser').value.trim();
     const pass = document.getElementById('adminPass').value;
@@ -1584,7 +1804,6 @@
       } catch(e){}
     }
 
-    // Local fallback
     if (user === 'admin' && pass === 'iqra2026') {
       sessionStorage.setItem(SESSION_KEY, 'true');
       alertEl.style.display = 'none';
@@ -1602,7 +1821,6 @@
     navigate('home');
   }
 
-  // Admin Panel
   let currentAdminSection = 'dashboard';
   let currentComplaintId = null;
   let allAdminComplaints = [];
@@ -1734,7 +1952,7 @@
   }
 
   function buildAdminTable(data) {
-    if (!data.length) return '<tr><td colspan="8" style="text-align:center;padding:32px;color:#95A5A6;">No complaints found</td></tr>';
+    if (!data.length) return '<tr><td colspan="9" style="text-align:center;padding:32px;color:#95A5A6;">No complaints found</td></tr>';
     return data.map(c =>
       '<tr>' +
       '<td><code style="font-size:12px;background:#F0F4F8;padding:2px 7px;border-radius:5px;">' + c.ticket_id + '</code></td>' +
@@ -1743,6 +1961,7 @@
       '<td style="max-width:180px;"><span title="' + escapeHtml(c.title) + '" style="display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + escapeHtml(c.title) + '</span></td>' +
       '<td>' + getStatusBadge(c.status) + '</td>' +
       '<td>' + getPriorityBadge(c.priority) + '</td>' +
+      '<td>' + (c.public_visible !== false ? '<span class="badge badge-resolved">Public</span>' : '<span class="badge badge-rejected">Hidden</span>') + '</td>' +
       '<td style="font-size:13px;white-space:nowrap;">' + formatDate(c.created_at) + '</td>' +
       '<td><button onclick="openDetail(' + c.id + ')" class="btn btn-outline btn-sm">View</button></td>' +
       '</tr>'
@@ -1778,6 +1997,7 @@
     document.getElementById('updateStatus').value = c.status || 'Pending';
     document.getElementById('updatePriority').value = c.priority || 'Medium';
     document.getElementById('updateNotes').value = c.admin_notes || '';
+    document.getElementById('updatePublicVisible').checked = c.public_visible !== false;
     document.getElementById('updateMsg').style.display = 'none';
 
     document.getElementById('detailModal').classList.add('active');
@@ -1794,6 +2014,7 @@
     const newStatus = document.getElementById('updateStatus').value;
     const newPriority = document.getElementById('updatePriority').value;
     const newNotes = document.getElementById('updateNotes').value.trim();
+    const newPublicVisible = document.getElementById('updatePublicVisible').checked;
 
     await checkServer();
     if (isServerAvailable) {
@@ -1801,7 +2022,7 @@
         const res = await fetch('/api/admin/complaints/' + currentComplaintId, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ status: newStatus, priority: newPriority, admin_notes: newNotes })
+          body: JSON.stringify({ status: newStatus, priority: newPriority, admin_notes: newNotes, public_visible: newPublicVisible })
         });
         const json = await res.json();
         if (json.success) {
@@ -1811,13 +2032,13 @@
       } catch(e){}
     }
 
-    // Local DB fallback
     const db = getLocalDB();
     const idx = db.findIndex(x => x.id === currentComplaintId);
     if (idx !== -1) {
       db[idx].status = newStatus;
       db[idx].priority = newPriority;
       db[idx].admin_notes = newNotes;
+      db[idx].public_visible = newPublicVisible;
       db[idx].updated_at = new Date().toISOString();
       saveLocalDB(db);
     }
@@ -1859,7 +2080,6 @@
     renderAdminTable();
   }
 
-  // Settings
   async function changePassword() {
     const curr = document.getElementById('currPass').value;
     const newP = document.getElementById('newPass').value;
@@ -1908,7 +2128,6 @@
     URL.revokeObjectURL(url);
   }
 
-  // Helpers
   function getStatusBadge(s) {
     const map = { 'Pending':'badge-pending', 'In Review':'badge-review', 'Resolved':'badge-resolved', 'Rejected':'badge-rejected' };
     return '<span class="badge ' + (map[s] || 'badge-pending') + '">' + (s || 'Pending') + '</span>';
@@ -1936,8 +2155,10 @@
   document.getElementById('successModal').addEventListener('click', e => {
     if (e.target === document.getElementById('successModal')) closeSuccessModal();
   });
+  document.getElementById('boardDetailModal').addEventListener('click', e => {
+    if (e.target === document.getElementById('boardDetailModal')) closeBoardDetail();
+  });
 
-  // Init
   updateHomeStats();
 </script>
 
