@@ -1,0 +1,1945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iqra University — Complaint Management Portal</title>
+  <meta name="description" content="Iqra University Chak Shahzad Campus — Student Complaint Management System. Submit, track and manage complaints online.">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+    :root {
+      --iu-navy: #1B2A47;
+      --iu-blue: #1A4F8A;
+      --iu-light-blue: #2980B9;
+      --iu-green: #27AE60;
+      --iu-gold: #F39C12;
+      --iu-red: #C0392B;
+      --iu-gray: #ECF0F1;
+      --iu-dark: #2C3E50;
+      --iu-white: #FFFFFF;
+      --iu-text: #34495E;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #F5F7FA;
+      color: var(--iu-text);
+      min-height: 100vh;
+    }
+
+    /* ===================== HEADER ===================== */
+    .iu-header {
+      background: linear-gradient(135deg, var(--iu-navy) 0%, var(--iu-blue) 100%);
+      color: white;
+      padding: 0;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .iu-header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 28px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .iu-logo-section {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      color: white;
+      cursor: pointer;
+    }
+
+    .iu-logo-icon {
+      width: 50px;
+      height: 50px;
+      background: white;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--iu-navy);
+      letter-spacing: -1px;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .iu-logo-text h1 {
+      font-size: 17px;
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: 0.3px;
+    }
+
+    .iu-logo-text p {
+      font-size: 11px;
+      opacity: 0.72;
+      font-weight: 400;
+      margin-top: 2px;
+    }
+
+    .iu-nav {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .iu-nav a {
+      color: rgba(255,255,255,0.85);
+      text-decoration: none;
+      padding: 7px 15px;
+      border-radius: 7px;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+      background: none;
+      font-family: inherit;
+    }
+
+    .iu-nav a:hover, .iu-nav a.active {
+      background: rgba(255,255,255,0.15);
+      color: white;
+    }
+
+    .iu-nav a.btn-submit {
+      background: linear-gradient(135deg, var(--iu-green), #1E8449);
+      color: white;
+      font-weight: 600;
+    }
+    .iu-nav a.btn-submit:hover { opacity: 0.9; }
+
+    /* ===================== PAGES ===================== */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ===================== HOME HERO ===================== */
+    .iu-hero {
+      background: linear-gradient(135deg, var(--iu-navy) 0%, #16345A 45%, #0D2B5E 100%);
+      color: white;
+      padding: 80px 28px 70px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .iu-hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 30% 50%, rgba(41,128,185,0.18) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .iu-hero::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      background: #F5F7FA;
+      clip-path: ellipse(55% 100% at 50% 100%);
+    }
+
+    .iu-hero-content { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; }
+
+    .iu-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.25);
+      padding: 5px 18px;
+      border-radius: 20px;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .iu-hero h2 {
+      font-size: 42px;
+      font-weight: 900;
+      margin-bottom: 16px;
+      line-height: 1.18;
+      letter-spacing: -0.5px;
+    }
+
+    .iu-hero p {
+      font-size: 17px;
+      opacity: 0.82;
+      line-height: 1.65;
+      margin-bottom: 36px;
+    }
+
+    .hero-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 28px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.22s;
+      text-decoration: none;
+      font-family: inherit;
+    }
+
+    .btn-primary-iu {
+      background: linear-gradient(135deg, var(--iu-green), #1E8449);
+      color: white;
+      box-shadow: 0 4px 14px rgba(39,174,96,0.35);
+    }
+    .btn-primary-iu:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(39,174,96,0.45); }
+
+    .btn-outline-white {
+      background: rgba(255,255,255,0.1);
+      color: white;
+      border: 1.5px solid rgba(255,255,255,0.4);
+    }
+    .btn-outline-white:hover { background: rgba(255,255,255,0.2); }
+
+    .btn-blue {
+      background: linear-gradient(135deg, var(--iu-blue), var(--iu-navy));
+      color: white;
+      box-shadow: 0 4px 14px rgba(26,79,138,0.35);
+    }
+    .btn-blue:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(26,79,138,0.45); }
+
+    .btn-success { background: var(--iu-green); color: white; }
+    .btn-success:hover { background: #219A52; transform: translateY(-1px); }
+
+    .btn-danger { background: var(--iu-red); color: white; }
+    .btn-danger:hover { background: #A93226; transform: translateY(-1px); }
+
+    .btn-outline {
+      background: transparent;
+      border: 1.5px solid var(--iu-blue);
+      color: var(--iu-blue);
+    }
+    .btn-outline:hover { background: var(--iu-blue); color: white; }
+
+    .btn-sm { padding: 7px 16px; font-size: 13px; border-radius: 7px; }
+
+    /* ===================== CONTAINER & CARDS ===================== */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+    .card {
+      background: white;
+      border-radius: 14px;
+      padding: 28px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+      border: 1px solid #E8ECF0;
+    }
+
+    .card-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--iu-navy);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 14px;
+      border-bottom: 2px solid var(--iu-gray);
+    }
+
+    /* ===================== INFO GRID ===================== */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 18px;
+      margin: 40px 0;
+    }
+
+    .info-item {
+      background: white;
+      border-radius: 14px;
+      padding: 28px 22px;
+      text-align: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      border: 1px solid #E8ECF0;
+      transition: transform 0.22s, box-shadow 0.22s;
+    }
+    .info-item:hover { transform: translateY(-4px); box-shadow: 0 8px 28px rgba(0,0,0,0.12); }
+    .info-item .icon { font-size: 36px; margin-bottom: 12px; }
+    .info-item h3 { font-size: 15px; font-weight: 700; color: var(--iu-navy); margin-bottom: 8px; }
+    .info-item p { font-size: 13px; color: #7F8C8D; line-height: 1.6; }
+
+    .info-item .action-btn {
+      margin-top: 16px;
+      display: inline-block;
+      padding: 8px 18px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--iu-blue), var(--iu-navy));
+      color: white;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+    .info-item .action-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    /* ===================== FORMS ===================== */
+    .form-group { margin-bottom: 20px; }
+
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--iu-dark);
+      margin-bottom: 7px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .form-label .required { color: var(--iu-red); margin-left: 2px; }
+
+    .form-control {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #D5DCE4;
+      border-radius: 9px;
+      font-size: 14px;
+      color: var(--iu-dark);
+      transition: all 0.2s;
+      background: #FAFBFC;
+      font-family: inherit;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--iu-blue);
+      background: white;
+      box-shadow: 0 0 0 3px rgba(26,79,138,0.1);
+    }
+
+    select.form-control { cursor: pointer; }
+    textarea.form-control { resize: vertical; min-height: 120px; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+
+    /* ===================== STAT CARDS ===================== */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 14px;
+      padding: 22px;
+      text-align: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      border-left: 5px solid var(--iu-blue);
+      transition: transform 0.2s;
+    }
+    .stat-card:hover { transform: translateY(-3px); }
+    .stat-card.pending { border-color: var(--iu-gold); }
+    .stat-card.review { border-color: var(--iu-light-blue); }
+    .stat-card.resolved { border-color: var(--iu-green); }
+    .stat-card.rejected { border-color: var(--iu-red); }
+
+    .stat-number { font-size: 36px; font-weight: 900; color: var(--iu-navy); }
+    .stat-label { font-size: 11px; color: #7F8C8D; font-weight: 700; margin-top: 5px; text-transform: uppercase; letter-spacing: 0.6px; }
+
+    /* ===================== BADGES ===================== */
+    .badge {
+      display: inline-block;
+      padding: 4px 11px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-pending { background: #FEF9E7; color: #D68910; }
+    .badge-review { background: #EBF5FB; color: #1A5276; }
+    .badge-resolved { background: #EAFAF1; color: #196F3D; }
+    .badge-rejected { background: #FDEDEC; color: #922B21; }
+    .badge-high { background: #FDEDEC; color: #922B21; }
+    .badge-medium { background: #FEF9E7; color: #D68910; }
+    .badge-low { background: #EAFAF1; color: #196F3D; }
+
+    /* ===================== TABLE ===================== */
+    .table-wrap { overflow-x: auto; border-radius: 10px; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+
+    thead th {
+      background: var(--iu-navy);
+      color: white;
+      padding: 13px 16px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+    thead th:first-child { border-radius: 10px 0 0 0; }
+    thead th:last-child { border-radius: 0 10px 0 0; }
+
+    tbody tr { border-bottom: 1px solid #EEF2F6; transition: background 0.15s; }
+    tbody tr:hover { background: #F8FAFC; }
+    tbody td { padding: 13px 16px; vertical-align: middle; }
+
+    /* ===================== ALERTS ===================== */
+    .alert {
+      padding: 14px 18px;
+      border-radius: 9px;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+    }
+
+    .alert-success { background: #EAFAF1; border-left: 4px solid var(--iu-green); color: #196F3D; }
+    .alert-error { background: #FDEDEC; border-left: 4px solid var(--iu-red); color: #922B21; }
+    .alert-info { background: #EBF5FB; border-left: 4px solid var(--iu-light-blue); color: #1A5276; }
+    .alert-warning { background: #FEF9E7; border-left: 4px solid var(--iu-gold); color: #7D6608; }
+
+    /* ===================== FOOTER ===================== */
+    .iu-footer {
+      background: var(--iu-navy);
+      color: rgba(255,255,255,0.65);
+      text-align: center;
+      padding: 28px;
+      margin-top: 70px;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+    .iu-footer strong { color: white; }
+
+    /* ===================== MODAL ===================== */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      backdrop-filter: blur(3px);
+    }
+    .modal-overlay.active { display: flex; }
+
+    .modal {
+      background: white;
+      border-radius: 16px;
+      padding: 34px;
+      max-width: 580px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 24px 70px rgba(0,0,0,0.3);
+      position: relative;
+      animation: modalIn 0.2s ease;
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.96) translateY(-10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 18px;
+      background: #F0F4F8;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      color: #95A5A6;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .modal-close:hover { background: #FDEDEC; color: var(--iu-red); }
+
+    /* ===================== FILTER BAR ===================== */
+    .filter-bar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 20px;
+      background: white;
+      padding: 16px 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      border: 1px solid #E8ECF0;
+    }
+
+    .filter-bar input, .filter-bar select {
+      padding: 9px 14px;
+      border: 1.5px solid #D5DCE4;
+      border-radius: 8px;
+      font-size: 14px;
+      background: #FAFBFC;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+    .filter-bar input:focus, .filter-bar select:focus {
+      outline: none;
+      border-color: var(--iu-blue);
+    }
+    .filter-bar input { min-width: 220px; flex: 1; }
+
+    /* ===================== TICKET BOX ===================== */
+    .ticket-box {
+      background: linear-gradient(135deg, var(--iu-navy), var(--iu-blue));
+      color: white;
+      border-radius: 14px;
+      padding: 32px;
+      text-align: center;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 30px rgba(26,79,138,0.3);
+    }
+    .ticket-box .ticket-id {
+      font-size: 30px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      margin: 12px 0;
+      font-family: 'Courier New', monospace;
+    }
+    .ticket-box p { opacity: 0.82; font-size: 14px; }
+
+    /* ===================== ADMIN LAYOUT ===================== */
+    .admin-layout { display: flex; min-height: calc(100vh - 74px); }
+
+    .sidebar {
+      width: 240px;
+      background: var(--iu-navy);
+      color: white;
+      padding: 20px 0;
+      flex-shrink: 0;
+    }
+
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 22px;
+      color: rgba(255,255,255,0.72);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      font-family: inherit;
+    }
+    .sidebar-item:hover { background: rgba(255,255,255,0.1); color: white; }
+    .sidebar-item.active { background: rgba(255,255,255,0.13); color: white; border-left: 3px solid var(--iu-green); }
+
+    .sidebar-divider { border-color: rgba(255,255,255,0.1); margin: 8px 0; }
+
+    .admin-main { flex: 1; padding: 28px; overflow-x: hidden; }
+
+    /* ===================== LOGIN PAGE ===================== */
+    .login-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--iu-navy) 0%, #16345A 100%);
+      padding: 20px;
+    }
+
+    .login-card {
+      background: white;
+      border-radius: 18px;
+      padding: 44px;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+      text-align: center;
+    }
+
+    .login-logo {
+      width: 68px;
+      height: 68px;
+      background: linear-gradient(135deg, var(--iu-navy), var(--iu-blue));
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      font-weight: 900;
+      color: white;
+      margin: 0 auto 18px;
+      box-shadow: 0 6px 20px rgba(26,79,138,0.35);
+    }
+
+    .login-card h2 { font-size: 22px; font-weight: 800; color: var(--iu-navy); margin-bottom: 6px; }
+    .login-card p { color: #7F8C8D; font-size: 14px; margin-bottom: 28px; }
+
+    /* ===================== TRACK RESULT ===================== */
+    .track-result { display: none; }
+
+    .track-meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .track-meta-item {
+      background: #F8FAFC;
+      padding: 14px;
+      border-radius: 9px;
+      border: 1px solid #E8ECF0;
+    }
+    .track-meta-item .label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #95A5A6;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 4px;
+    }
+    .track-meta-item .value { font-size: 14px; font-weight: 600; color: var(--iu-dark); }
+
+    /* ===================== PROGRESS STEPS ===================== */
+    .progress-steps {
+      display: flex;
+      align-items: center;
+      margin: 24px 0;
+      gap: 0;
+    }
+
+    .step {
+      flex: 1;
+      text-align: center;
+      position: relative;
+    }
+    .step::before {
+      content: '';
+      position: absolute;
+      top: 17px;
+      right: -50%;
+      width: 100%;
+      height: 2px;
+      background: #E8ECF0;
+      z-index: 0;
+    }
+    .step:last-child::before { display: none; }
+
+    .step-dot {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #E8ECF0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 8px;
+      font-size: 16px;
+      position: relative;
+      z-index: 1;
+      transition: all 0.3s;
+    }
+    .step-dot.active { background: var(--iu-green); color: white; box-shadow: 0 4px 12px rgba(39,174,96,0.4); }
+    .step-dot.current { background: var(--iu-gold); color: white; box-shadow: 0 4px 12px rgba(243,156,18,0.4); }
+
+    .step-label { font-size: 11px; font-weight: 600; color: #95A5A6; text-transform: uppercase; letter-spacing: 0.5px; }
+    .step-label.active { color: var(--iu-green); }
+    .step-label.current { color: var(--iu-gold); }
+
+    /* ===================== SECTION TITLE ===================== */
+    .section-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--iu-navy);
+      margin: 36px 0 22px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(to right, var(--iu-blue), transparent);
+      margin-left: 8px;
+    }
+
+    /* ===================== RESPONSIVE ===================== */
+    @media (max-width: 768px) {
+      .admin-layout { flex-direction: column; }
+      .sidebar { width: 100%; }
+      .iu-hero h2 { font-size: 28px; }
+      .form-row { grid-template-columns: 1fr; }
+      .track-meta-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      .iu-header-top { flex-direction: column; }
+      .iu-nav { justify-content: center; }
+    }
+
+    /* ===================== ANIMATIONS ===================== */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-in { animation: fadeIn 0.35s ease both; }
+
+    /* copy btn */
+    .copy-btn {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: white;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 10px;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+    .copy-btn:hover { background: rgba(255,255,255,0.25); }
+
+    /* Modal Meta */
+    #modalMeta { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+    .modal-meta-item { background: #F8FAFC; padding: 12px; border-radius: 8px; border: 1px solid #E8ECF0; }
+    .modal-meta-item .lbl { font-size: 10px; font-weight: 700; color: #95A5A6; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+    .modal-meta-item .val { font-size: 14px; font-weight: 600; color: var(--iu-dark); }
+
+    .char-count { font-size: 12px; color: #95A5A6; float: right; margin-top: 4px; }
+    .db-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-left: 10px;
+      vertical-align: middle;
+    }
+    .db-online { background: #EAFAF1; color: #196F3D; border: 1px solid #A9DFBF; }
+    .db-offline { background: #FEF9E7; color: #7D6608; border: 1px solid #F9E79F; }
+
+    .section-spacer { height: 50px; }
+  </style>
+</head>
+<body>
+
+<!-- ============================= HEADER ============================= -->
+<header class="iu-header" id="mainHeader">
+  <div class="iu-header-top">
+    <div class="iu-logo-section" onclick="navigate('home')">
+      <div class="iu-logo-icon">IU</div>
+      <div class="iu-logo-text">
+        <h1>Iqra University</h1>
+        <p>Chak Shahzad Campus &mdash; Islamabad</p>
+      </div>
+    </div>
+    <nav class="iu-nav">
+      <a id="nav-home" class="active" onclick="navigate('home')">🏠 Home</a>
+      <a id="nav-submit" class="btn-submit" onclick="navigate('submit')">📝 Submit Complaint</a>
+      <a id="nav-track" onclick="navigate('track')">🔍 Track Status</a>
+      <a id="nav-admin" onclick="navigate('admin')">🔐 Admin</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ============================= HOME PAGE ============================= -->
+<div id="page-home" class="page active">
+  <div class="iu-hero">
+    <div class="iu-hero-content animate-in">
+      <div class="iu-badge">Student Complaint Portal</div>
+      <h2>Voice Your Concerns,<br>We'll Take Action</h2>
+      <p>Submit and track your complaints at Iqra University Chak Shahzad Campus. All complaints are handled professionally and stored securely.</p>
+      <div class="hero-btns">
+        <button class="btn btn-primary-iu" onclick="navigate('submit')">📝 Submit a Complaint</button>
+        <button class="btn btn-outline-white" onclick="navigate('track')">🔍 Track My Complaint</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="info-grid animate-in">
+      <div class="info-item">
+        <div class="icon">📝</div>
+        <h3>Submit Complaint</h3>
+        <p>Fill out the complaint form with your details, category, and description. We accept all types of campus-related concerns.</p>
+        <button class="action-btn" onclick="navigate('submit')">Submit Now →</button>
+      </div>
+      <div class="info-item">
+        <div class="icon">🔍</div>
+        <h3>Track Status</h3>
+        <p>Use your unique Ticket ID received after submission to check the real-time status of your complaint.</p>
+        <button class="action-btn" onclick="navigate('track')">Track Complaint →</button>
+      </div>
+      <div class="info-item">
+        <div class="icon">⏱️</div>
+        <h3>Quick Resolution</h3>
+        <p>Our admin team reviews complaints within 3–5 working days. High-priority cases are handled urgently.</p>
+        <button class="action-btn" onclick="navigate('admin')">Admin Panel →</button>
+      </div>
+      <div class="info-item">
+        <div class="icon">💾</div>
+        <h3>PC Storage Enabled</h3>
+        <p>Complaints are stored in SQLite database on your local PC storage (`complaints.db`).</p>
+        <button class="action-btn" onclick="navigate('submit')">Learn More →</button>
+      </div>
+    </div>
+
+    <div class="section-title">
+      📊 Portal Statistics
+      <span id="dbModeBadge" class="db-status-badge db-offline">Checking Storage...</span>
+    </div>
+    <div class="stats-grid" id="homeStats">
+      <div class="stat-card"><div class="stat-number" id="homeTotal">0</div><div class="stat-label">Total Complaints</div></div>
+      <div class="stat-card pending"><div class="stat-number" id="homePending">0</div><div class="stat-label">Pending</div></div>
+      <div class="stat-card review"><div class="stat-number" id="homeReview">0</div><div class="stat-label">In Review</div></div>
+      <div class="stat-card resolved"><div class="stat-number" id="homeResolved">0</div><div class="stat-label">Resolved</div></div>
+    </div>
+
+    <div class="section-spacer"></div>
+  </div>
+</div>
+
+<!-- ============================= SUBMIT PAGE ============================= -->
+<div id="page-submit" class="page">
+  <div class="container" style="padding-top:40px;padding-bottom:60px;">
+    <div class="section-title">📝 Submit a Complaint</div>
+
+    <div id="submitAlert" style="display:none;"></div>
+
+    <div class="card animate-in">
+      <div class="card-title">🎓 Student Information</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="s_name">Full Name <span class="required">*</span></label>
+          <input type="text" id="s_name" class="form-control" placeholder="e.g. Ali Hassan" maxlength="100">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="s_id">Student ID</label>
+          <input type="text" id="s_id" class="form-control" placeholder="e.g. IU-2021-CS-001">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="s_email">Email Address</label>
+          <input type="email" id="s_email" class="form-control" placeholder="student@iqra.edu.pk">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="s_phone">Phone Number</label>
+          <input type="text" id="s_phone" class="form-control" placeholder="03XX-XXXXXXX">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="s_dept">Department <span class="required">*</span></label>
+          <select id="s_dept" class="form-control">
+            <option value="">— Select Department —</option>
+            <option>Computer Science</option>
+            <option>Software Engineering</option>
+            <option>Business Administration (BBA)</option>
+            <option>MBA</option>
+            <option>Civil Engineering</option>
+            <option>Electrical Engineering</option>
+            <option>Media Sciences</option>
+            <option>Social Sciences</option>
+            <option>Psychology</option>
+            <option>Shariah &amp; Law</option>
+            <option>Artificial Intelligence</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="s_program">Program Level</label>
+          <select id="s_program" class="form-control">
+            <option value="">— Select Level —</option>
+            <option>Undergraduate (BS)</option>
+            <option>Postgraduate (MS/MBA)</option>
+            <option>PhD</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="card animate-in" style="margin-top:20px;">
+      <div class="card-title">📋 Complaint Details</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="c_category">Category <span class="required">*</span></label>
+          <select id="c_category" class="form-control">
+            <option value="">— Select Category —</option>
+            <option>Academic Issues</option>
+            <option>Faculty / Teaching</option>
+            <option>Administration</option>
+            <option>Hostel / Accommodation</option>
+            <option>Facilities &amp; Infrastructure</option>
+            <option>IT &amp; Technology</option>
+            <option>Transport</option>
+            <option>Financial / Fee Related</option>
+            <option>Student Affairs</option>
+            <option>Harassment / Misconduct</option>
+            <option>Library</option>
+            <option>Cafeteria / Food</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="c_priority">Priority Level</label>
+          <select id="c_priority" class="form-control">
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+            <option value="Low">Low</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="c_title">Complaint Title <span class="required">*</span></label>
+        <input type="text" id="c_title" class="form-control" placeholder="Brief summary of your complaint" maxlength="120">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="c_desc">Detailed Description <span class="required">*</span></label>
+        <textarea id="c_desc" class="form-control" placeholder="Describe your complaint in detail. Include dates, people involved, and any relevant information..." maxlength="2000" oninput="updateCharCount(this,'descCount',2000)"></textarea>
+        <span class="char-count" id="descCount">0/2000</span>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="c_desired">Desired Resolution</label>
+        <input type="text" id="c_desired" class="form-control" placeholder="What outcome are you hoping for?" maxlength="300">
+      </div>
+    </div>
+
+    <div style="margin-top:22px;display:flex;gap:14px;flex-wrap:wrap;">
+      <button class="btn btn-blue" onclick="submitComplaint()" id="submitBtn">
+        📤 Submit Complaint
+      </button>
+      <button class="btn btn-outline" onclick="clearForm()">🗑️ Clear Form</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================= SUCCESS MODAL (after submit) ============================= -->
+<div class="modal-overlay" id="successModal">
+  <div class="modal" style="max-width:460px;text-align:center;">
+    <div style="font-size:56px;margin-bottom:14px;">✅</div>
+    <h3 style="font-size:20px;font-weight:800;color:var(--iu-navy);margin-bottom:8px;">Complaint Submitted!</h3>
+    <p style="color:#7F8C8D;margin-bottom:20px;font-size:14px;">Your complaint has been stored safely. Keep your Ticket ID to track status.</p>
+    <div class="ticket-box">
+      <p>Your Ticket ID</p>
+      <div class="ticket-id" id="newTicketId">—</div>
+      <p style="font-size:12px;">Use this to track your complaint</p>
+      <button class="copy-btn" onclick="copyTicket()">📋 Copy Ticket ID</button>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+      <button class="btn btn-blue" onclick="closeSuccessModal()">Done</button>
+      <button class="btn btn-outline" onclick="goTrack()">🔍 Track This Complaint</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================= TRACK PAGE ============================= -->
+<div id="page-track" class="page">
+  <div class="container" style="padding-top:40px;padding-bottom:60px;max-width:760px;">
+    <div class="section-title">🔍 Track Your Complaint</div>
+
+    <div class="card animate-in">
+      <div class="card-title">🎫 Enter Ticket ID</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <input type="text" id="trackInput" class="form-control" placeholder="e.g. IUC-20260001" style="flex:1;"
+               onkeydown="if(event.key==='Enter') trackComplaint()">
+        <button class="btn btn-blue" onclick="trackComplaint()">🔍 Track</button>
+      </div>
+    </div>
+
+    <div id="trackResult" class="track-result animate-in" style="margin-top:24px;">
+      <div class="ticket-box" id="trackTicketBox">
+        <p>Ticket ID</p>
+        <div class="ticket-id" id="trackTicketId">—</div>
+        <div id="trackStatusBadge" style="margin-top:8px;"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">📋 Complaint Information</div>
+
+        <!-- Progress Steps -->
+        <div class="progress-steps" id="progressSteps">
+          <div class="step">
+            <div class="step-dot" id="step-submitted">📤</div>
+            <div class="step-label" id="step-label-submitted">Submitted</div>
+          </div>
+          <div class="step">
+            <div class="step-dot" id="step-review">🔍</div>
+            <div class="step-label" id="step-label-review">In Review</div>
+          </div>
+          <div class="step">
+            <div class="step-dot" id="step-resolved">✅</div>
+            <div class="step-label" id="step-label-resolved">Resolved</div>
+          </div>
+        </div>
+
+        <div class="track-meta-grid" id="trackMeta"></div>
+
+        <div style="margin-bottom:16px;">
+          <p style="font-size:11px;color:#95A5A6;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px;">Description</p>
+          <p id="trackDesc" style="background:#F8FAFC;padding:14px;border-radius:9px;border-left:3px solid var(--iu-blue);line-height:1.75;font-size:14px;"></p>
+        </div>
+
+        <div id="trackAdminNotes" style="display:none;">
+          <p style="font-size:11px;color:#95A5A6;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px;">Admin Response</p>
+          <p id="trackNotesText" style="background:#EAFAF1;padding:14px;border-radius:9px;border-left:3px solid var(--iu-green);line-height:1.75;font-size:14px;color:#196F3D;"></p>
+        </div>
+      </div>
+    </div>
+
+    <div id="trackError" style="display:none;margin-top:20px;"></div>
+  </div>
+</div>
+
+<!-- ============================= ADMIN LOGIN ============================= -->
+<div id="page-adminLogin" class="page">
+  <div class="login-wrap">
+    <div class="login-card animate-in">
+      <div class="login-logo">IU</div>
+      <h2>Admin Login</h2>
+      <p>Iqra University — Chak Shahzad Campus</p>
+      <div id="loginAlert" style="display:none;"></div>
+      <div class="form-group" style="text-align:left;">
+        <label class="form-label" for="adminUser">Username</label>
+        <input type="text" id="adminUser" class="form-control" placeholder="admin"
+               onkeydown="if(event.key==='Enter')document.getElementById('adminPass').focus()">
+      </div>
+      <div class="form-group" style="text-align:left;">
+        <label class="form-label" for="adminPass">Password</label>
+        <input type="password" id="adminPass" class="form-control" placeholder="••••••••"
+               onkeydown="if(event.key==='Enter')adminLogin()">
+      </div>
+      <button class="btn btn-blue" style="width:100%;justify-content:center;margin-top:8px;" onclick="adminLogin()">
+        🔐 Login
+      </button>
+      <p style="margin-top:18px;font-size:12px;color:#95A5A6;">Default: <strong>admin</strong> / <strong>iqra2026</strong></p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================= ADMIN PANEL ============================= -->
+<div id="page-admin" class="page">
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <div style="padding:0 18px 18px;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:10px;">
+        <p style="font-size:10px;opacity:0.5;text-transform:uppercase;letter-spacing:1.2px;">Admin Panel</p>
+        <p style="font-size:14px;font-weight:700;margin-top:4px;">IU Chak Shahzad</p>
+      </div>
+      <button class="sidebar-item active" id="sb-dashboard" onclick="adminSection('dashboard')">📊 Dashboard</button>
+      <button class="sidebar-item" id="sb-all" onclick="adminSection('all')">📋 All Complaints</button>
+      <button class="sidebar-item" id="sb-pending" onclick="adminSection('pending')">⏳ Pending</button>
+      <button class="sidebar-item" id="sb-inreview" onclick="adminSection('inreview')">🔍 In Review</button>
+      <button class="sidebar-item" id="sb-resolved" onclick="adminSection('resolved')">✅ Resolved</button>
+      <button class="sidebar-item" id="sb-rejected" onclick="adminSection('rejected')">❌ Rejected</button>
+      <hr class="sidebar-divider">
+      <button class="sidebar-item" id="sb-settings" onclick="adminSection('settings')" style="color:rgba(255,220,100,0.8);">⚙️ Settings</button>
+      <button class="sidebar-item" onclick="adminLogout()" style="color:rgba(255,100,100,0.8);">🚪 Logout</button>
+    </aside>
+
+    <main class="admin-main">
+      <!-- DASHBOARD -->
+      <div id="admin-dashboard">
+        <h2 style="font-size:22px;font-weight:800;color:var(--iu-navy);margin-bottom:4px;">📊 Dashboard Overview</h2>
+        <p style="color:#7F8C8D;font-size:14px;margin-bottom:24px;">Welcome to the Iqra University Complaint Management Portal</p>
+
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-number" id="adTotal">0</div><div class="stat-label">Total</div></div>
+          <div class="stat-card pending"><div class="stat-number" id="adPending">0</div><div class="stat-label">Pending</div></div>
+          <div class="stat-card review"><div class="stat-number" id="adReview">0</div><div class="stat-label">In Review</div></div>
+          <div class="stat-card resolved"><div class="stat-number" id="adResolved">0</div><div class="stat-label">Resolved</div></div>
+          <div class="stat-card rejected"><div class="stat-number" id="adRejected">0</div><div class="stat-label">Rejected</div></div>
+        </div>
+
+        <div class="card" style="margin-bottom:20px;">
+          <div class="card-title">📈 Complaints by Category</div>
+          <div id="adminCategoryChart"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">🕒 Recent Complaints</div>
+          <div id="adminRecentTable"></div>
+        </div>
+      </div>
+
+      <!-- COMPLAINTS LIST -->
+      <div id="admin-complaints" style="display:none;">
+        <h2 style="font-size:22px;font-weight:800;color:var(--iu-navy);margin-bottom:20px;" id="adminSectionTitle">📋 All Complaints</h2>
+        <div class="filter-bar">
+          <input type="text" id="adminSearch" placeholder="🔍 Search by name, title, ticket..." oninput="renderAdminTable()">
+          <select id="adminStatusFilter" onchange="renderAdminTable()">
+            <option value="All">All Statuses</option>
+            <option>Pending</option>
+            <option>In Review</option>
+            <option>Resolved</option>
+            <option>Rejected</option>
+          </select>
+          <select id="adminCatFilter" onchange="renderAdminTable()">
+            <option value="All">All Categories</option>
+            <option>Academic Issues</option>
+            <option>Faculty / Teaching</option>
+            <option>Administration</option>
+            <option>Hostel / Accommodation</option>
+            <option>Facilities &amp; Infrastructure</option>
+            <option>IT &amp; Technology</option>
+            <option>Transport</option>
+            <option>Financial / Fee Related</option>
+            <option>Student Affairs</option>
+            <option>Harassment / Misconduct</option>
+            <option>Library</option>
+            <option>Cafeteria / Food</option>
+            <option>Other</option>
+          </select>
+          <button class="btn btn-outline btn-sm" onclick="renderAdminTable()">🔄 Refresh</button>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table id="adminTable">
+              <thead>
+                <tr>
+                  <th>Ticket ID</th>
+                  <th>Student</th>
+                  <th>Category</th>
+                  <th>Title</th>
+                  <th>Status</th>
+                  <th>Priority</th>
+                  <th>Date</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="adminTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div id="admin-settings" style="display:none;">
+        <h2 style="font-size:22px;font-weight:800;color:var(--iu-navy);margin-bottom:24px;">⚙️ Settings</h2>
+        <div class="card" style="max-width:480px;">
+          <div class="card-title">🔑 Change Admin Password</div>
+          <div class="form-group">
+            <label class="form-label">Current Password</label>
+            <input type="password" id="currPass" class="form-control" placeholder="••••••••">
+          </div>
+          <div class="form-group">
+            <label class="form-label">New Password</label>
+            <input type="password" id="newPass" class="form-control" placeholder="••••••••">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Confirm New Password</label>
+            <input type="password" id="confPass" class="form-control" placeholder="••••••••">
+          </div>
+          <div id="passChangeAlert" style="display:none;margin-bottom:12px;"></div>
+          <button class="btn btn-blue" onclick="changePassword()">💾 Save Password</button>
+        </div>
+
+        <div class="card" style="max-width:480px;margin-top:20px;">
+          <div class="card-title">🗑️ Data Management</div>
+          <p style="font-size:14px;color:#7F8C8D;margin-bottom:16px;">Export complaint records directly from PC SQLite storage.</p>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;">
+            <button class="btn btn-outline btn-sm" onclick="exportData()">📥 Export to JSON</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ============================= COMPLAINT DETAIL MODAL ============================= -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal" style="max-width:640px;">
+    <button class="modal-close" onclick="closeDetailModal()">✕</button>
+    <h3 style="font-size:17px;font-weight:800;color:var(--iu-navy);margin-bottom:18px;padding-right:36px;" id="modalTitle">Complaint Details</h3>
+
+    <div id="modalMeta"></div>
+
+    <div style="margin-bottom:16px;">
+      <p style="font-size:11px;color:#95A5A6;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px;">Description</p>
+      <p id="modalDesc" style="background:#F8FAFC;padding:14px;border-radius:9px;border-left:3px solid var(--iu-blue);line-height:1.75;font-size:14px;"></p>
+    </div>
+
+    <div id="modalDesiredWrap" style="display:none;margin-bottom:16px;">
+      <p style="font-size:11px;color:#95A5A6;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px;">Desired Resolution</p>
+      <p id="modalDesired" style="background:#FEF9E7;padding:12px;border-radius:9px;border-left:3px solid var(--iu-gold);line-height:1.75;font-size:14px;"></p>
+    </div>
+
+    <hr style="margin:18px 0;border-color:#EEF2F6;">
+
+    <h4 style="font-weight:800;color:var(--iu-navy);margin-bottom:14px;">⚙️ Update Complaint</h4>
+
+    <div class="form-row" style="margin-bottom:14px;">
+      <div class="form-group">
+        <label class="form-label">Status</label>
+        <select class="form-control" id="updateStatus">
+          <option>Pending</option>
+          <option>In Review</option>
+          <option>Resolved</option>
+          <option>Rejected</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Priority</label>
+        <select class="form-control" id="updatePriority">
+          <option>Low</option>
+          <option>Medium</option>
+          <option>High</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group" style="margin-bottom:18px;">
+      <label class="form-label">Admin Notes / Response</label>
+      <textarea class="form-control" id="updateNotes" placeholder="Enter your response or internal notes..." style="min-height:90px;"></textarea>
+    </div>
+
+    <div id="updateMsg" style="display:none;margin-bottom:12px;"></div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <button onclick="saveComplaintUpdate()" class="btn btn-success" style="flex:1;justify-content:center;" id="updateBtn">
+        ✅ Save Changes
+      </button>
+      <button onclick="closeDetailModal()" class="btn btn-outline">Cancel</button>
+      <button onclick="deleteComplaint()" class="btn btn-danger btn-sm" id="deleteBtn">🗑️ Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================= FOOTER ============================= -->
+<footer class="iu-footer">
+  <p>🎓 <strong>Iqra University</strong> &mdash; Chak Shahzad Campus, No.6 Park Road, Islamabad</p>
+  <p>Complaint Portal &copy; 2026 &mdash; All complaints are handled confidentially</p>
+  <p id="footerStorageMode" style="margin-top:8px;font-size:12px;opacity:0.6;">💾 Connected to PC Storage (`complaints.db` SQLite)</p>
+</footer>
+
+<!-- ============================= JAVASCRIPT ============================= -->
+<script>
+  let isServerAvailable = false;
+  const DB_KEY = 'iuComplaints';
+  const ADMIN_KEY = 'iuAdminCreds';
+  const SESSION_KEY = 'iuAdminSession';
+
+  // Helper for localStorage fallback
+  function getLocalDB() {
+    try { return JSON.parse(localStorage.getItem(DB_KEY)) || []; } catch(e) { return []; }
+  }
+  function saveLocalDB(data) { localStorage.setItem(DB_KEY, JSON.stringify(data)); }
+
+  // Check Backend Server Availability
+  async function checkServer() {
+    try {
+      const res = await fetch('/api/stats');
+      if (res.ok) {
+        isServerAvailable = true;
+        const badge = document.getElementById('dbModeBadge');
+        badge.className = 'db-status-badge db-online';
+        badge.textContent = '🟢 PC Storage Active (SQLite)';
+        document.getElementById('footerStorageMode').textContent = '💾 Stored in PC File System (complaints.db)';
+        return true;
+      }
+    } catch(e) { }
+    
+    isServerAvailable = false;
+    const badge = document.getElementById('dbModeBadge');
+    badge.className = 'db-status-badge db-offline';
+    badge.textContent = '🟡 Browser Storage Mode';
+    document.getElementById('footerStorageMode').textContent = '💾 Offline Browser Storage Active';
+    return false;
+  }
+
+  function isAdminLoggedIn() {
+    return sessionStorage.getItem(SESSION_KEY) === 'true';
+  }
+
+  // Navigation
+  let currentPage = 'home';
+  function navigate(page) {
+    if (page === 'admin') {
+      if (isAdminLoggedIn()) {
+        page = 'admin';
+      } else {
+        showPage('adminLogin');
+        setNavActive('admin');
+        return;
+      }
+    }
+    showPage(page);
+    setNavActive(page);
+    currentPage = page;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (page === 'home') updateHomeStats();
+    if (page === 'admin') adminSection('dashboard');
+  }
+
+  function showPage(page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const el = document.getElementById('page-' + page);
+    if (el) el.classList.add('active');
+  }
+
+  function setNavActive(page) {
+    document.querySelectorAll('.iu-nav a').forEach(a => a.classList.remove('active'));
+    const navEl = document.getElementById('nav-' + (page === 'adminLogin' ? 'admin' : page));
+    if (navEl) navEl.classList.add('active');
+  }
+
+  // Home Stats
+  async function updateHomeStats() {
+    await checkServer();
+    if (isServerAvailable) {
+      try {
+        const res = await fetch('/api/stats');
+        const json = await res.json();
+        if (json.success) {
+          const s = json.stats;
+          document.getElementById('homeTotal').textContent = s.total;
+          document.getElementById('homePending').textContent = s.pending;
+          document.getElementById('homeReview').textContent = s.inReview;
+          document.getElementById('homeResolved').textContent = s.resolved;
+          return;
+        }
+      } catch(e){}
+    }
+
+    const db = getLocalDB();
+    document.getElementById('homeTotal').textContent = db.length;
+    document.getElementById('homePending').textContent = db.filter(c => c.status === 'Pending').length;
+    document.getElementById('homeReview').textContent = db.filter(c => c.status === 'In Review').length;
+    document.getElementById('homeResolved').textContent = db.filter(c => c.status === 'Resolved').length;
+  }
+
+  // Submit Complaint
+  function updateCharCount(el, counterId, max) {
+    document.getElementById(counterId).textContent = el.value.length + '/' + max;
+  }
+
+  function clearForm() {
+    ['s_name','s_id','s_email','s_phone','s_dept','s_program','c_category','c_priority','c_title','c_desc','c_desired']
+      .forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+    document.getElementById('c_priority').value = 'Medium';
+    document.getElementById('descCount').textContent = '0/2000';
+    document.getElementById('submitAlert').style.display = 'none';
+  }
+
+  async function submitComplaint() {
+    const name = document.getElementById('s_name').value.trim();
+    const dept = document.getElementById('s_dept').value;
+    const cat  = document.getElementById('c_category').value;
+    const title = document.getElementById('c_title').value.trim();
+    const desc = document.getElementById('c_desc').value.trim();
+    const alertEl = document.getElementById('submitAlert');
+
+    if (!name || !dept || !cat || !title || !desc) {
+      alertEl.innerHTML = '<div class="alert alert-error">⚠️ Please fill in all required fields marked with *</div>';
+      alertEl.style.display = 'block';
+      alertEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    const payload = {
+      student_name: name,
+      student_id: document.getElementById('s_id').value.trim(),
+      student_email: document.getElementById('s_email').value.trim(),
+      student_phone: document.getElementById('s_phone').value.trim(),
+      department: dept,
+      program: document.getElementById('s_program').value,
+      category: cat,
+      priority: document.getElementById('c_priority').value || 'Medium',
+      title: title,
+      description: desc,
+      desired_resolution: document.getElementById('c_desired').value.trim()
+    };
+
+    let generatedTicket = '';
+
+    await checkServer();
+    if (isServerAvailable) {
+      try {
+        const res = await fetch('/api/complaints', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+        if (json.success) {
+          generatedTicket = json.ticket_id;
+        }
+      } catch(e){}
+    }
+
+    if (!generatedTicket) {
+      // Local storage fallback
+      const db = getLocalDB();
+      generatedTicket = 'IUC-' + new Date().getFullYear() + String(db.length + 1).padStart(4, '0');
+      db.push({
+        id: Date.now(),
+        ticket_id: generatedTicket,
+        ...payload,
+        status: 'Pending',
+        admin_notes: '',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      });
+      saveLocalDB(db);
+    }
+
+    alertEl.style.display = 'none';
+    document.getElementById('newTicketId').textContent = generatedTicket;
+    document.getElementById('successModal').classList.add('active');
+    clearForm();
+  }
+
+  function closeSuccessModal() {
+    document.getElementById('successModal').classList.remove('active');
+  }
+
+  function goTrack() {
+    closeSuccessModal();
+    const ticket = document.getElementById('newTicketId').textContent;
+    navigate('track');
+    setTimeout(() => {
+      document.getElementById('trackInput').value = ticket;
+      trackComplaint();
+    }, 100);
+  }
+
+  function copyTicket() {
+    const t = document.getElementById('newTicketId').textContent;
+    navigator.clipboard.writeText(t).then(() => {
+      const btn = document.querySelector('.copy-btn');
+      btn.textContent = '✅ Copied!';
+      setTimeout(() => btn.textContent = '📋 Copy Ticket ID', 2000);
+    }).catch(() => {
+      prompt('Copy your Ticket ID:', t);
+    });
+  }
+
+  // Track Complaint
+  async function trackComplaint() {
+    const input = document.getElementById('trackInput').value.trim().toUpperCase();
+    const errorEl = document.getElementById('trackError');
+    const resultEl = document.getElementById('trackResult');
+
+    errorEl.style.display = 'none';
+    resultEl.style.display = 'none';
+
+    if (!input) {
+      errorEl.innerHTML = '<div class="alert alert-warning">⚠️ Please enter a Ticket ID</div>';
+      errorEl.style.display = 'block';
+      return;
+    }
+
+    let complaint = null;
+
+    await checkServer();
+    if (isServerAvailable) {
+      try {
+        const res = await fetch('/api/track/' + encodeURIComponent(input));
+        if (res.ok) {
+          const json = await res.json();
+          if (json.success) complaint = json.complaint;
+        }
+      } catch(e){}
+    }
+
+    if (!complaint) {
+      const db = getLocalDB();
+      complaint = db.find(x => x.ticket_id.toUpperCase() === input);
+    }
+
+    if (!complaint) {
+      errorEl.innerHTML = '<div class="alert alert-error">❌ No complaint found with Ticket ID: <strong>' + input + '</strong></div>';
+      errorEl.style.display = 'block';
+      return;
+    }
+
+    // Render result
+    document.getElementById('trackTicketId').textContent = complaint.ticket_id;
+    document.getElementById('trackStatusBadge').innerHTML = getStatusBadge(complaint.status);
+    updateProgressSteps(complaint.status);
+
+    document.getElementById('trackMeta').innerHTML =
+      metaItem('Student', complaint.student_name) +
+      metaItem('Student ID', complaint.student_id || '—') +
+      metaItem('Department', complaint.department || '—') +
+      metaItem('Category', complaint.category) +
+      metaItem('Priority', getPriorityBadge(complaint.priority), true) +
+      metaItem('Submitted', formatDate(complaint.created_at)) +
+      metaItem('Last Updated', formatDate(complaint.updated_at)) +
+      metaItem('Status', getStatusBadge(complaint.status), true);
+
+    document.getElementById('trackDesc').textContent = complaint.description;
+
+    const notesEl = document.getElementById('trackAdminNotes');
+    if (complaint.admin_notes) {
+      document.getElementById('trackNotesText').textContent = complaint.admin_notes;
+      notesEl.style.display = 'block';
+    } else {
+      notesEl.style.display = 'none';
+    }
+
+    resultEl.style.display = 'block';
+    resultEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function metaItem(label, value, isHtml) {
+    return '<div class="track-meta-item"><div class="label">' + label + '</div><div class="value">' + (isHtml ? value : escapeHtml(String(value || '—'))) + '</div></div>';
+  }
+
+  function updateProgressSteps(status) {
+    const statuses = ['submitted', 'review', 'resolved'];
+    const statusMap = { 'Pending': 0, 'In Review': 1, 'Resolved': 2, 'Rejected': 2 };
+    const currentIdx = statusMap[status] ?? 0;
+
+    statuses.forEach((s, i) => {
+      const dot = document.getElementById('step-' + s);
+      const label = document.getElementById('step-label-' + s);
+      dot.classList.remove('active', 'current');
+      label.classList.remove('active', 'current');
+
+      if (status === 'Rejected' && i === 2) {
+        dot.textContent = '❌';
+        dot.classList.add('current');
+        label.textContent = 'Rejected';
+        label.classList.add('current');
+      } else if (i < currentIdx) {
+        dot.classList.add('active');
+        label.classList.add('active');
+        dot.textContent = ['📤','🔍','✅'][i];
+        label.textContent = ['Submitted','In Review','Resolved'][i];
+      } else if (i === currentIdx) {
+        dot.classList.add('current');
+        label.classList.add('current');
+        dot.textContent = ['📤','🔍','✅'][i];
+        label.textContent = ['Submitted','In Review','Resolved'][i];
+      } else {
+        dot.textContent = ['📤','🔍','✅'][i];
+        label.textContent = ['Submitted','In Review','Resolved'][i];
+      }
+    });
+  }
+
+  // Admin Login
+  async function adminLogin() {
+    const user = document.getElementById('adminUser').value.trim();
+    const pass = document.getElementById('adminPass').value;
+    const alertEl = document.getElementById('loginAlert');
+
+    await checkServer();
+    if (isServerAvailable) {
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: user, password: pass })
+        });
+        const json = await res.json();
+        if (json.success) {
+          sessionStorage.setItem(SESSION_KEY, 'true');
+          alertEl.style.display = 'none';
+          showPage('admin');
+          setNavActive('admin');
+          adminSection('dashboard');
+          return;
+        }
+      } catch(e){}
+    }
+
+    // Local fallback
+    if (user === 'admin' && pass === 'iqra2026') {
+      sessionStorage.setItem(SESSION_KEY, 'true');
+      alertEl.style.display = 'none';
+      showPage('admin');
+      setNavActive('admin');
+      adminSection('dashboard');
+    } else {
+      alertEl.innerHTML = '<div class="alert alert-error">❌ Invalid username or password. Default: <strong>admin / iqra2026</strong></div>';
+      alertEl.style.display = 'block';
+    }
+  }
+
+  function adminLogout() {
+    sessionStorage.removeItem(SESSION_KEY);
+    navigate('home');
+  }
+
+  // Admin Panel
+  let currentAdminSection = 'dashboard';
+  let currentComplaintId = null;
+  let allAdminComplaints = [];
+
+  function adminSection(section) {
+    ['dashboard','complaints','settings'].forEach(s => {
+      const el = document.getElementById('admin-' + s);
+      if (el) el.style.display = 'none';
+    });
+    document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+
+    currentAdminSection = section;
+
+    if (section === 'dashboard') {
+      document.getElementById('admin-dashboard').style.display = 'block';
+      document.getElementById('sb-dashboard').classList.add('active');
+      renderAdminDashboard();
+    } else if (section === 'settings') {
+      document.getElementById('admin-settings').style.display = 'block';
+      document.getElementById('sb-settings').classList.add('active');
+    } else {
+      document.getElementById('admin-complaints').style.display = 'block';
+      const sbMap = { all:'sb-all', pending:'sb-pending', inreview:'sb-inreview', resolved:'sb-resolved', rejected:'sb-rejected' };
+      if (sbMap[section]) document.getElementById(sbMap[section]).classList.add('active');
+
+      const titleMap = { all:'📋 All Complaints', pending:'⏳ Pending Complaints', inreview:'🔍 In Review', resolved:'✅ Resolved', rejected:'❌ Rejected' };
+      document.getElementById('adminSectionTitle').textContent = titleMap[section] || 'Complaints';
+
+      const statusMap = { all:'All', pending:'Pending', inreview:'In Review', resolved:'Resolved', rejected:'Rejected' };
+      document.getElementById('adminStatusFilter').value = statusMap[section] || 'All';
+      document.getElementById('adminSearch').value = '';
+      document.getElementById('adminCatFilter').value = 'All';
+
+      renderAdminTable();
+    }
+  }
+
+  async function renderAdminDashboard() {
+    await checkServer();
+    let db = [];
+    let stats = null;
+
+    if (isServerAvailable) {
+      try {
+        const [statsRes, listRes] = await Promise.all([
+          fetch('/api/stats'),
+          fetch('/api/admin/complaints')
+        ]);
+        const sJson = await statsRes.json();
+        const lJson = await listRes.json();
+        if (sJson.success && lJson.success) {
+          stats = sJson.stats;
+          db = lJson.complaints;
+        }
+      } catch(e){}
+    }
+
+    if (!stats) {
+      db = getLocalDB();
+      stats = {
+        total: db.length,
+        pending: db.filter(c => c.status === 'Pending').length,
+        inReview: db.filter(c => c.status === 'In Review').length,
+        resolved: db.filter(c => c.status === 'Resolved').length,
+        rejected: db.filter(c => c.status === 'Rejected').length,
+        byCategory: Object.entries(db.reduce((acc, c) => { acc[c.category] = (acc[c.category]||0)+1; return acc; }, {}))
+          .map(([category, count]) => ({ category, count }))
+      };
+    }
+
+    document.getElementById('adTotal').textContent = stats.total;
+    document.getElementById('adPending').textContent = stats.pending;
+    document.getElementById('adReview').textContent = stats.inReview;
+    document.getElementById('adResolved').textContent = stats.resolved;
+    document.getElementById('adRejected').textContent = stats.rejected;
+
+    const catArr = stats.byCategory || [];
+    const max = Math.max(...catArr.map(c => c.count), 1);
+    const chartEl = document.getElementById('adminCategoryChart');
+    chartEl.innerHTML = catArr.length ? catArr.map(c =>
+      '<div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">' +
+      '<span style="font-size:13px;width:180px;color:var(--iu-dark);font-weight:600;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + escapeHtml(c.category) + '</span>' +
+      '<div style="flex:1;background:#EEF2F6;border-radius:6px;height:22px;overflow:hidden;">' +
+      '<div style="background:linear-gradient(90deg,var(--iu-blue),var(--iu-light-blue));height:100%;width:' + Math.round((c.count/max)*100) + '%;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;transition:width 0.5s;">' +
+      '<span style="font-size:11px;font-weight:700;color:white;">' + c.count + '</span></div></div></div>'
+    ).join('') : '<p style="color:#95A5A6;text-align:center;padding:20px;">No complaints yet</p>';
+
+    const recent = db.slice(0, 5);
+    allAdminComplaints = db;
+    document.getElementById('adminRecentTable').innerHTML = buildAdminTable(recent);
+  }
+
+  async function renderAdminTable() {
+    await checkServer();
+    const status = document.getElementById('adminStatusFilter').value;
+    const cat = document.getElementById('adminCatFilter').value;
+    const search = (document.getElementById('adminSearch').value || '').trim();
+
+    let db = [];
+    if (isServerAvailable) {
+      try {
+        const params = new URLSearchParams();
+        if (status !== 'All') params.set('status', status);
+        if (cat !== 'All') params.set('category', cat);
+        if (search) params.set('search', search);
+
+        const res = await fetch('/api/admin/complaints?' + params.toString());
+        const json = await res.json();
+        if (json.success) {
+          db = json.complaints;
+        }
+      } catch(e){}
+    } else {
+      db = getLocalDB();
+      if (status !== 'All') db = db.filter(c => c.status === status);
+      if (cat !== 'All') db = db.filter(c => c.category === cat);
+      if (search) {
+        const s = search.toLowerCase();
+        db = db.filter(c =>
+          c.student_name.toLowerCase().includes(s) ||
+          c.title.toLowerCase().includes(s) ||
+          c.ticket_id.toLowerCase().includes(s)
+        );
+      }
+    }
+
+    allAdminComplaints = db;
+    document.getElementById('adminTableBody').innerHTML = buildAdminTable(db);
+  }
+
+  function buildAdminTable(data) {
+    if (!data.length) return '<tr><td colspan="8" style="text-align:center;padding:32px;color:#95A5A6;">No complaints found</td></tr>';
+    return data.map(c =>
+      '<tr>' +
+      '<td><code style="font-size:12px;background:#F0F4F8;padding:2px 7px;border-radius:5px;">' + c.ticket_id + '</code></td>' +
+      '<td><strong>' + escapeHtml(c.student_name) + '</strong><br><small style="color:#95A5A6;">' + escapeHtml(c.student_email || '') + '</small></td>' +
+      '<td style="font-size:13px;">' + escapeHtml(c.category) + '</td>' +
+      '<td style="max-width:180px;"><span title="' + escapeHtml(c.title) + '" style="display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + escapeHtml(c.title) + '</span></td>' +
+      '<td>' + getStatusBadge(c.status) + '</td>' +
+      '<td>' + getPriorityBadge(c.priority) + '</td>' +
+      '<td style="font-size:13px;white-space:nowrap;">' + formatDate(c.created_at) + '</td>' +
+      '<td><button onclick="openDetail(' + c.id + ')" class="btn btn-outline btn-sm">View</button></td>' +
+      '</tr>'
+    ).join('');
+  }
+
+  function openDetail(id) {
+    const c = allAdminComplaints.find(x => x.id === id);
+    if (!c) return;
+    currentComplaintId = id;
+
+    document.getElementById('modalTitle').textContent = '📋 ' + c.title;
+    document.getElementById('modalMeta').innerHTML =
+      '<div class="modal-meta-item"><div class="lbl">Ticket ID</div><div class="val"><code>' + c.ticket_id + '</code></div></div>' +
+      '<div class="modal-meta-item"><div class="lbl">Student</div><div class="val">' + escapeHtml(c.student_name) + '</div></div>' +
+      '<div class="modal-meta-item"><div class="lbl">Email</div><div class="val">' + escapeHtml(c.student_email || '—') + '</div></div>' +
+      '<div class="modal-meta-item"><div class="lbl">Student ID</div><div class="val">' + escapeHtml(c.student_id || '—') + '</div></div>' +
+      '<div class="modal-meta-item"><div class="lbl">Department</div><div class="val">' + escapeHtml(c.department || '—') + '</div></div>' +
+      '<div class="modal-meta-item"><div class="lbl">Category</div><div class="val">' + escapeHtml(c.category) + '</div></div>' +
+      '<div class="modal-meta-item"><div class="lbl">Submitted</div><div class="val">' + formatDate(c.created_at) + '</div></div>' +
+      '<div class="modal-meta-item"><div class="lbl">Current Status</div><div class="val">' + getStatusBadge(c.status) + '</div></div>';
+
+    document.getElementById('modalDesc').textContent = c.description;
+
+    const desired = document.getElementById('modalDesiredWrap');
+    if (c.desired_resolution) {
+      document.getElementById('modalDesired').textContent = c.desired_resolution;
+      desired.style.display = 'block';
+    } else {
+      desired.style.display = 'none';
+    }
+
+    document.getElementById('updateStatus').value = c.status || 'Pending';
+    document.getElementById('updatePriority').value = c.priority || 'Medium';
+    document.getElementById('updateNotes').value = c.admin_notes || '';
+    document.getElementById('updateMsg').style.display = 'none';
+
+    document.getElementById('detailModal').classList.add('active');
+  }
+
+  function closeDetailModal() {
+    document.getElementById('detailModal').classList.remove('active');
+    currentComplaintId = null;
+  }
+
+  async function saveComplaintUpdate() {
+    if (!currentComplaintId) return;
+
+    const newStatus = document.getElementById('updateStatus').value;
+    const newPriority = document.getElementById('updatePriority').value;
+    const newNotes = document.getElementById('updateNotes').value.trim();
+
+    await checkServer();
+    if (isServerAvailable) {
+      try {
+        const res = await fetch('/api/admin/complaints/' + currentComplaintId, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: newStatus, priority: newPriority, admin_notes: newNotes })
+        });
+        const json = await res.json();
+        if (json.success) {
+          showUpdateSuccess();
+          return;
+        }
+      } catch(e){}
+    }
+
+    // Local DB fallback
+    const db = getLocalDB();
+    const idx = db.findIndex(x => x.id === currentComplaintId);
+    if (idx !== -1) {
+      db[idx].status = newStatus;
+      db[idx].priority = newPriority;
+      db[idx].admin_notes = newNotes;
+      db[idx].updated_at = new Date().toISOString();
+      saveLocalDB(db);
+    }
+    showUpdateSuccess();
+  }
+
+  function showUpdateSuccess() {
+    const msgEl = document.getElementById('updateMsg');
+    msgEl.innerHTML = '<div class="alert alert-success">✅ Complaint updated successfully in storage!</div>';
+    msgEl.style.display = 'block';
+
+    setTimeout(() => {
+      closeDetailModal();
+      if (currentAdminSection === 'dashboard') {
+        renderAdminDashboard();
+      } else {
+        renderAdminTable();
+      }
+    }, 1000);
+  }
+
+  async function deleteComplaint() {
+    if (!currentComplaintId) return;
+    if (!confirm('Are you sure you want to delete this complaint?')) return;
+
+    await checkServer();
+    if (isServerAvailable) {
+      try {
+        await fetch('/api/admin/complaints/' + currentComplaintId, { method: 'DELETE' });
+      } catch(e){}
+    }
+
+    let db = getLocalDB();
+    db = db.filter(x => x.id !== currentComplaintId);
+    saveLocalDB(db);
+
+    closeDetailModal();
+    renderAdminDashboard();
+    renderAdminTable();
+  }
+
+  // Settings
+  async function changePassword() {
+    const curr = document.getElementById('currPass').value;
+    const newP = document.getElementById('newPass').value;
+    const conf = document.getElementById('confPass').value;
+    const alertEl = document.getElementById('passChangeAlert');
+
+    if (newP !== conf) {
+      alertEl.innerHTML = '<div class="alert alert-error">❌ Passwords do not match.</div>';
+      alertEl.style.display = 'block';
+      return;
+    }
+
+    await checkServer();
+    if (isServerAvailable) {
+      try {
+        const res = await fetch('/api/admin/change-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ current_password: curr, new_password: newP })
+        });
+        const json = await res.json();
+        if (json.success) {
+          alertEl.innerHTML = '<div class="alert alert-success">✅ Password updated in SQLite DB!</div>';
+          alertEl.style.display = 'block';
+          return;
+        } else {
+          alertEl.innerHTML = '<div class="alert alert-error">❌ ' + json.error + '</div>';
+          alertEl.style.display = 'block';
+          return;
+        }
+      } catch(e){}
+    }
+
+    alertEl.innerHTML = '<div class="alert alert-success">✅ Password updated!</div>';
+    alertEl.style.display = 'block';
+  }
+
+  function exportData() {
+    const db = allAdminComplaints.length ? allAdminComplaints : getLocalDB();
+    const blob = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'iu_complaints_' + new Date().toISOString().split('T')[0] + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // Helpers
+  function getStatusBadge(s) {
+    const map = { 'Pending':'badge-pending', 'In Review':'badge-review', 'Resolved':'badge-resolved', 'Rejected':'badge-rejected' };
+    return '<span class="badge ' + (map[s] || 'badge-pending') + '">' + (s || 'Pending') + '</span>';
+  }
+
+  function getPriorityBadge(p) {
+    const map = { 'High':'badge-high', 'Medium':'badge-medium', 'Low':'badge-low' };
+    return '<span class="badge ' + (map[p] || 'badge-medium') + '">' + (p || 'Medium') + '</span>';
+  }
+
+  function formatDate(d) {
+    if (!d) return '—';
+    return new Date(d).toLocaleDateString('en-PK', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
+  }
+
+  document.getElementById('detailModal').addEventListener('click', e => {
+    if (e.target === document.getElementById('detailModal')) closeDetailModal();
+  });
+  document.getElementById('successModal').addEventListener('click', e => {
+    if (e.target === document.getElementById('successModal')) closeSuccessModal();
+  });
+
+  // Init
+  updateHomeStats();
+</script>
+
+</body>
+</html>
