@@ -770,7 +770,7 @@
     <div class="iu-hero-content animate-in">
       <div class="iu-badge">Not Affiliated With IQRA University Admin</div>
       <h2>Voice Your Concerns,<br>Make Them Impossible to Ignore</h2>
-      <p>Submit a complaint and — if you choose — let it appear on the public board where every student can see it. Real pressure comes from visibility.</p>
+      <p>Submit a complaint — it goes straight to the public board where every student can see it. Real pressure comes from visibility.</p>
       <div class="hero-btns">
         <button class="btn btn-primary-iu" onclick="navigate('submit')">📝 Submit a Complaint</button>
         <button class="btn btn-outline-white" onclick="navigate('board')">📢 View Public Board</button>
@@ -801,9 +801,6 @@
     </div>
     <div class="stats-grid" id="homeStats">
       <div class="stat-card"><div class="stat-number" id="homeTotal">0</div><div class="stat-label">Total Complaints</div></div>
-      <div class="stat-card pending"><div class="stat-number" id="homePending">0</div><div class="stat-label">Pending</div></div>
-      <div class="stat-card review"><div class="stat-number" id="homeReview">0</div><div class="stat-label">In Review</div></div>
-      <div class="stat-card resolved"><div class="stat-number" id="homeResolved">0</div><div class="stat-label">Resolved</div></div>
     </div>
 
     <div class="section-spacer"></div>
@@ -939,7 +936,7 @@
     <div class="card animate-in" style="margin-top:20px;">
       <div class="card-title">📢 Public Visibility</div>
       <div class="checkbox-row">
-        <input type="checkbox" id="s_public_visible" checked>
+        
         <label for="s_public_visible"><strong>Show this complaint on the Public Board</strong> so other students can see it too. Your name, email, phone, and student ID are always hidden from the public board unless you opt in below.</label>
       </div>
       <div class="checkbox-row">
@@ -1247,7 +1244,6 @@
 <footer class="iu-footer">
   <p>🎓 <strong>Independent Project</strong> — inspired by Iqra University, Chak Shahzad Campus, Islamabad</p>
   <p>Not operated by or affiliated with Iqra University's administration. Complaint Portal &copy; 2026</p>
-  <p id="footerStorageMode" style="font-size:12px;color:#95A5A6;margin-top:6px;"></p>
 </footer>
 
 <!-- ============================= JAVASCRIPT ============================= -->
@@ -1268,7 +1264,7 @@
       if (res.ok) {
         isServerAvailable = true;
         const badge = document.getElementById('dbModeBadge');
-        if (badge) { badge.className = 'db-status-badge db-online'; badge.textContent = '🟢 PC Storage Active (SQLite)'; }
+        if (badge) { badge.className = 'db-status-badge db-online'; badge.textContent = '🟢'; }
         const footer = document.getElementById('footerStorageMode');
         if (footer) footer.textContent = '💾 Stored in PC File System (complaints.db)';
         return true;
@@ -1277,7 +1273,7 @@
 
     isServerAvailable = false;
     const badge = document.getElementById('dbModeBadge');
-    if (badge) { badge.className = 'db-status-badge db-offline'; badge.textContent = '🟡 Browser Storage Mode'; }
+    if (badge) { badge.className = 'db-status-badge db-offline'; badge.textContent = '🟡'; }
     const footer = document.getElementById('footerStorageMode');
     if (footer) footer.textContent = '💾 Offline Browser Storage Active';
     return false;
@@ -1328,9 +1324,7 @@
         if (json.success) {
           const s = json.stats;
           document.getElementById('homeTotal').textContent = s.total;
-          document.getElementById('homePending').textContent = s.pending;
-          document.getElementById('homeReview').textContent = s.inReview;
-          document.getElementById('homeResolved').textContent = s.resolved;
+          
           return;
         }
       } catch(e){}
@@ -1338,9 +1332,7 @@
 
     const db = getLocalDB();
     document.getElementById('homeTotal').textContent = db.length;
-    document.getElementById('homePending').textContent = db.filter(c => c.status === 'Pending').length;
-    document.getElementById('homeReview').textContent = db.filter(c => c.status === 'In Review').length;
-    document.getElementById('homeResolved').textContent = db.filter(c => c.status === 'Resolved').length;
+    
   }
 
   function updateCharCount(el, counterId, max) {
@@ -1353,8 +1345,10 @@
     document.getElementById('c_priority').value = 'Medium';
     document.getElementById('descCount').textContent = '0/2000';
     document.getElementById('submitAlert').style.display = 'none';
-    document.getElementById('s_public_visible').checked = true;
-    document.getElementById('s_show_name').checked = false;
+    const pubEl = document.getElementById('s_public_visible');
+    if (pubEl) pubEl.checked = true;
+    const showEl = document.getElementById('s_show_name');
+    if (showEl) showEl.checked = false;
   }
 
   async function submitComplaint() {
@@ -1374,8 +1368,10 @@
       return;
     }
 
-    const publicVisible = document.getElementById('s_public_visible').checked;
-    const showName = document.getElementById('s_show_name').checked;
+    const pubCheck = document.getElementById('s_public_visible');
+    const publicVisible = pubCheck ? pubCheck.checked : true;
+    const showNameCheck = document.getElementById('s_show_name');
+    const showName = showNameCheck ? showNameCheck.checked : false;
 
     const payload = {
       student_name: name || 'Anonymous Student',
@@ -1666,7 +1662,10 @@
 
     const recent = db.slice(0, 5);
     allAdminComplaints = db;
-    document.getElementById('adminRecentTable').innerHTML = buildAdminTable(recent);
+    document.getElementById('adminRecentTable').innerHTML = 
+      '<div class="table-wrap"><table>' +
+      '<thead><tr><th>Ticket ID</th><th>Student</th><th>Category</th><th>Title</th><th>Status</th><th>Priority</th><th>Public?</th><th>Date</th><th>Action</th></tr></thead>' +
+      '<tbody>' + buildAdminTable(recent) + '</tbody></table></div>';
   }
 
   async function renderAdminTable() {
