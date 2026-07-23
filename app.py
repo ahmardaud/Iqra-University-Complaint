@@ -36,11 +36,23 @@ def init_db():
             desired_resolution TEXT,
             status TEXT DEFAULT 'Pending',
             admin_notes TEXT DEFAULT '',
+            public_visible INTEGER DEFAULT 1,
+            show_name_publicly INTEGER DEFAULT 0,
             created_at TEXT NOT NULL,
             updated_at TEXT NOT NULL
         )
     ''')
     
+    # Migrations
+    try:
+        cursor.execute("ALTER TABLE complaints ADD COLUMN public_visible INTEGER DEFAULT 1")
+    except Exception:
+        pass
+    try:
+        cursor.execute("ALTER TABLE complaints ADD COLUMN show_name_publicly INTEGER DEFAULT 0")
+    except Exception:
+        pass
+
     # Admin settings table
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS admin_users (
@@ -62,17 +74,17 @@ def init_db():
                 'IUC-20260001', 'Ali Hassan', 'IU-2023-CS-045', 'ali.hassan@iqra.edu.pk', '0300-1234567',
                 'Computer Science', 'Undergraduate (BS)', 'Academic Issues', 'High',
                 'Grade dispute in Data Structures final exam',
-                'My final exam grade appears to be incorrect. I scored well in all sections but my GPA reflects a much lower score. I have my answer sheet photos for reference.',
+                'My final exam grade appears to be incorrect. I scored well in all sections but my GPA reflects a much lower score.',
                 'Re-evaluation of my final exam paper.', 'In Review', 'Forwarded to the academic controller for review.',
-                datetime.now().isoformat(), datetime.now().isoformat()
+                1, 1, datetime.now().isoformat(), datetime.now().isoformat()
             ),
             (
                 'IUC-20260002', 'Sara Malik', 'IU-2022-MBA-012', 'sara.malik@iqra.edu.pk', '0321-9876543',
                 'MBA', 'Postgraduate (MS/MBA)', 'Financial / Fee Related', 'High',
                 'Scholarship deduction not applied to fee challan',
-                'I was awarded a 50% merit scholarship at the start of this semester but the fee challan I received does not reflect any deduction.',
+                'I was awarded a 50% merit scholarship at the start of this semester but the fee challan does not reflect deduction.',
                 'Correction of fee challan with scholarship deduction applied.', 'Pending', '',
-                datetime.now().isoformat(), datetime.now().isoformat()
+                1, 0, datetime.now().isoformat(), datetime.now().isoformat()
             ),
             (
                 'IUC-20260003', 'Usman Iqbal', 'IU-2021-EE-007', 'usman.iqbal@iqra.edu.pk', '0333-5554433',
@@ -80,15 +92,15 @@ def init_db():
                 'Engineering lab equipment not functional',
                 'Lab 3 oscilloscopes have been non-functional for three weeks. This is affecting our practical work.',
                 'Repair or replacement of faulty oscilloscopes.', 'Resolved', 'Lab equipment serviced. 4 new oscilloscopes installed.',
-                datetime.now().isoformat(), datetime.now().isoformat()
+                1, 1, datetime.now().isoformat(), datetime.now().isoformat()
             )
         ]
         cursor.executemany('''
             INSERT INTO complaints (
                 ticket_id, student_name, student_id, student_email, student_phone,
                 department, program, category, priority, title, description,
-                desired_resolution, status, admin_notes, created_at, updated_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                desired_resolution, status, admin_notes, public_visible, show_name_publicly, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''', sample_data)
         
     conn.commit()
@@ -143,15 +155,17 @@ def submit_complaint():
     
     count = cursor.execute('SELECT COUNT(*) FROM complaints').fetchone()[0] + 1
     ticket_id = f"IUC-{datetime.now().year}{count:04d}"
-    
     now = datetime.now().isoformat()
+    
+    pub_val = 0 if data.get('public_visible') is False else 1
+    show_name = 1 if data.get('show_name_publicly') else 0
     
     cursor.execute('''
         INSERT INTO complaints (
             ticket_id, student_name, student_id, student_email, student_phone,
             department, program, category, priority, title, description,
-            desired_resolution, status, admin_notes, created_at, updated_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending', '', ?, ?)
+            desired_resolution, status, admin_notes, public_visible, show_name_publicly, created_at, updated_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending', '', ?, ?, ?, ?)
     ''', (
         ticket_id,
         data.get('student_name'),
@@ -165,6 +179,8 @@ def submit_complaint():
         data.get('title'),
         data.get('description'),
         data.get('desired_resolution', ''),
+        pub_val,
+        show_name,
         now,
         now
     ))
@@ -178,6 +194,44 @@ def submit_complaint():
         'ticket_id': ticket_id,
         'id': complaint_id,
         'message': 'Complaint submitted successfully!'
+    })
+
+@app.route('/api/public/complaints', methods=['GET'])
+def get_public_complaints():
+    status = request.args.get('status')
+    category = request.args.get('category')
+    search = request.args.get('search')
+    
+    query = '''
+        SELECT ticket_id, title, description, category, department, status, admin_notes, show_name_publicly, created_at,
+        CASE WHEN show_name_publicly = 1 THEN student_name ELSE NULL END as student_name
+        FROM complaints WHERE (public_visible = 1 OR public_visible IS NULL)
+    '''
+    params = []
+    
+    if status and status != 'All':
+        query += ' AND status = ?'
+        params.append(status)
+        
+    if category and category != 'All':
+        query += ' AND category = ?'
+        params.append(category)
+        
+    if search:
+        query += ' AND (title LIKE ? OR description LIKE ?)'
+        pattern = f'%{search}%'
+        params.extend([pattern, pattern])
+        
+    query += ' ORDER BY id DESC'
+    
+    conn = get_db()
+    cursor = conn.cursor()
+    rows = cursor.execute(query, params).fetchall()
+    conn.close()
+    
+    return jsonify({
+        'success': True,
+        'complaints': [dict(r) for r in rows]
     })
 
 @app.route('/api/track/<ticket_id>', methods=['GET'])
@@ -252,15 +306,16 @@ def update_complaint(complaint_id):
     status = data.get('status')
     priority = data.get('priority')
     admin_notes = data.get('admin_notes', '')
+    pub_val = 0 if data.get('public_visible') is False else 1
     now = datetime.now().isoformat()
     
     conn = get_db()
     cursor = conn.cursor()
     cursor.execute('''
         UPDATE complaints
-        SET status = ?, priority = ?, admin_notes = ?, updated_at = ?
+        SET status = ?, priority = ?, admin_notes = ?, public_visible = ?, updated_at = ?
         WHERE id = ?
-    ''', (status, priority, admin_notes, now, complaint_id))
+    ''', (status, priority, admin_notes, pub_val, now, complaint_id))
     
     conn.commit()
     affected = cursor.rowcount

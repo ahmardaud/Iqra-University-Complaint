@@ -35,10 +35,16 @@ function initDb() {
                 desired_resolution TEXT,
                 status TEXT DEFAULT 'Pending',
                 admin_notes TEXT DEFAULT '',
+                public_visible INTEGER DEFAULT 1,
+                show_name_publicly INTEGER DEFAULT 0,
                 created_at TEXT NOT NULL,
                 updated_at TEXT NOT NULL
             )
         `);
+
+        // Migration: add columns if table existed without them
+        db.run("ALTER TABLE complaints ADD COLUMN public_visible INTEGER DEFAULT 1", () => {});
+        db.run("ALTER TABLE complaints ADD COLUMN show_name_publicly INTEGER DEFAULT 0", () => {});
 
         // Admin settings table
         db.run(`
@@ -66,7 +72,7 @@ function initDb() {
                         'Grade dispute in Data Structures final exam',
                         'My final exam grade appears to be incorrect. I scored well in all sections but my GPA reflects a much lower score.',
                         'Re-evaluation of my final exam paper.', 'In Review', 'Forwarded to the academic controller for review.',
-                        now, now
+                        1, 1, now, now
                     ],
                     [
                         'IUC-20260002', 'Sara Malik', 'IU-2022-MBA-012', 'sara.malik@iqra.edu.pk', '0321-9876543',
@@ -74,7 +80,7 @@ function initDb() {
                         'Scholarship deduction not applied to fee challan',
                         'I was awarded a 50% merit scholarship at the start of this semester but the fee challan does not reflect deduction.',
                         'Correction of fee challan with scholarship deduction applied.', 'Pending', '',
-                        now, now
+                        1, 0, now, now
                     ],
                     [
                         'IUC-20260003', 'Usman Iqbal', 'IU-2021-EE-007', 'usman.iqbal@iqra.edu.pk', '0333-5554433',
@@ -82,7 +88,7 @@ function initDb() {
                         'Engineering lab equipment not functional',
                         'Lab 3 oscilloscopes have been non-functional for three weeks. This is affecting our practical work.',
                         'Repair or replacement of faulty oscilloscopes.', 'Resolved', 'Lab equipment serviced. 4 new oscilloscopes installed.',
-                        now, now
+                        1, 1, now, now
                     ]
                 ];
 
@@ -90,8 +96,8 @@ function initDb() {
                     INSERT INTO complaints (
                         ticket_id, student_name, student_id, student_email, student_phone,
                         department, program, category, priority, title, description,
-                        desired_resolution, status, admin_notes, created_at, updated_at
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        desired_resolution, status, admin_notes, public_visible, show_name_publicly, created_at, updated_at
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 `);
                 sampleData.forEach(r => stmt.run(r));
                 stmt.finalize();
@@ -146,12 +152,15 @@ app.post('/api/complaints', (req, res) => {
         const ticketId = `IUC-${new Date().getFullYear()}${String(count).padStart(4, '0')}`;
         const now = new Date().toISOString();
 
+        const publicVisible = data.public_visible === false ? 0 : 1;
+        const showName = data.show_name_publicly ? 1 : 0;
+
         db.run(`
             INSERT INTO complaints (
                 ticket_id, student_name, student_id, student_email, student_phone,
                 department, program, category, priority, title, description,
-                desired_resolution, status, admin_notes, created_at, updated_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending', '', ?, ?)
+                desired_resolution, status, admin_notes, public_visible, show_name_publicly, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending', '', ?, ?, ?, ?)
         `, [
             ticketId,
             data.student_name,
@@ -165,6 +174,8 @@ app.post('/api/complaints', (req, res) => {
             data.title,
             data.description,
             data.desired_resolution || '',
+            publicVisible,
+            showName,
             now,
             now
         ], function(err2) {
@@ -178,6 +189,34 @@ app.post('/api/complaints', (req, res) => {
                 message: 'Complaint submitted successfully!'
             });
         });
+    });
+});
+
+app.get('/api/public/complaints', (req, res) => {
+    const { status, category, search } = req.query;
+    let query = 'SELECT ticket_id, title, description, category, department, status, admin_notes, show_name_publicly, created_at, CASE WHEN show_name_publicly = 1 THEN student_name ELSE NULL END as student_name FROM complaints WHERE (public_visible = 1 OR public_visible IS NULL)';
+    const params = [];
+
+    if (status && status !== 'All') {
+        query += ' AND status = ?';
+        params.push(status);
+    }
+    if (category && category !== 'All') {
+        query += ' AND category = ?';
+        params.push(category);
+    }
+    if (search) {
+        query += ' AND (title LIKE ? OR description LIKE ?)';
+        const pattern = `%${search}%`;
+        params.push(pattern, pattern);
+    }
+    query += ' ORDER BY id DESC';
+
+    const db = getDb();
+    db.all(query, params, (err, rows) => {
+        db.close();
+        if (err) return res.status(500).json({ success: false, error: err.message });
+        res.json({ success: true, complaints: rows });
     });
 });
 
@@ -234,15 +273,17 @@ app.get('/api/admin/complaints', (req, res) => {
 });
 
 app.put('/api/admin/complaints/:id', (req, res) => {
-    const { status, priority, admin_notes } = req.body || {};
+    const { status, priority, admin_notes, public_visible } = req.body || {};
     const now = new Date().toISOString();
 
     const db = getDb();
+    const pubVal = public_visible === false ? 0 : 1;
+
     db.run(`
         UPDATE complaints
-        SET status = ?, priority = ?, admin_notes = ?, updated_at = ?
+        SET status = ?, priority = ?, admin_notes = ?, public_visible = ?, updated_at = ?
         WHERE id = ?
-    `, [status, priority, admin_notes || '', now, req.params.id], function(err) {
+    `, [status, priority, admin_notes || '', pubVal, now, req.params.id], function(err) {
         db.close();
         if (err || this.changes === 0) {
             return res.status(404).json({ success: false, error: 'Complaint not found' });

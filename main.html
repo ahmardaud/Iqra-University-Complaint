@@ -727,26 +727,27 @@
 
     /* ===================== PUBLIC BOARD ===================== */
     .board-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
     .board-card {
       background: white;
       border-radius: 14px;
-      padding: 20px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      padding: 22px 26px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
       border: 1px solid #E8ECF0;
-      border-left: 4px solid var(--iu-blue);
+      border-left: 5px solid var(--iu-blue);
       transition: transform 0.2s, box-shadow 0.2s;
       cursor: pointer;
+      width: 100%;
     }
-    .board-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
-    .board-card .board-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
-    .board-card .board-ticket { font-size: 11px; font-family: 'Courier New', monospace; color: #95A5A6; font-weight: 700; }
-    .board-card h4 { font-size: 15px; font-weight: 700; color: var(--iu-navy); margin-bottom: 8px; line-height: 1.4; }
-    .board-card .board-desc { font-size: 13px; color: #7F8C8D; line-height: 1.6; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-    .board-card .board-meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 11.5px; color: #95A5A6; }
+    .board-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+    .board-card .board-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .board-card .board-ticket { font-size: 12px; font-family: 'Courier New', monospace; color: #95A5A6; font-weight: 700; }
+    .board-card h4 { font-size: 16px; font-weight: 700; color: var(--iu-navy); margin-bottom: 8px; line-height: 1.4; }
+    .board-card .board-desc { font-size: 13.5px; color: #576574; line-height: 1.6; margin-bottom: 14px; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .board-card .board-meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 12px; color: #95A5A6; }
     .board-card .board-meta strong { color: var(--iu-dark); }
     .board-empty { text-align:center; padding: 50px 20px; color: #95A5A6; }
 
@@ -904,12 +905,12 @@
       <div class="card-title">🎓 Student Information</div>
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label" for="s_name">Full Name <span class="required">*</span></label>
+          <label class="form-label" for="s_name">Full Name</label>
           <input type="text" id="s_name" class="form-control" placeholder="e.g. Ali Hassan" maxlength="100">
         </div>
         <div class="form-group">
-          <label class="form-label" for="s_id">Student ID</label>
-          <input type="text" id="s_id" class="form-control" placeholder="e.g. IU-2021-CS-001">
+          <label class="form-label" for="s_id">Batch<span class="required">*</span></label>
+          <input type="text" id="s_id" class="form-control" placeholder="eg: SE-FA-21">
         </div>
       </div>
       <div class="form-row">
@@ -926,23 +927,39 @@
         <div class="form-group">
           <label class="form-label" for="s_dept">Department <span class="required">*</span></label>
           <select id="s_dept" class="form-control">
-            <option value="">— Select Department —</option>
+            <option value="">— Select Department / Program —</option>
             <option>Computer Science</option>
             <option>Software Engineering</option>
+            <option>Artificial Intelligence</option>
+            <option>AD Computing</option>
             <option>Business Administration (BBA)</option>
             <option>MBA</option>
+            <option>Accounting &amp; Finance</option>
+            <option>Commerce (FinTech)</option>
+            <option>ADP Business Administration</option>
+            <option>Psychology</option>
+            <option>Optometry</option>
+            <option>Human Nutrition &amp; Dietetics</option>
+            <option>Anaesthesia Technology</option>
+            <option>Medical Laboratory Technology</option>
+            <option>Radiology Technology</option>
+            <option>Dental Technology</option>
+            <option>(DPT)</option>
+            <option>(Pharm-D)</option>
+            <option>Nursing (BSN)</option>
+            <option>(CNA)</option>
+            <option>Nursing Diploma (Lady Health Visitor)</option>
+            <option>Nursing Diploma (Community Midwifery)</option>
             <option>Civil Engineering</option>
             <option>Electrical Engineering</option>
             <option>Media Sciences</option>
             <option>Social Sciences</option>
-            <option>Psychology</option>
             <option>Shariah &amp; Law</option>
-            <option>Artificial Intelligence</option>
             <option>Other</option>
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label" for="s_program">Program Level</label>
+          <label class="form-label" for="s_program">Program Level<span class="required">*</span></label>
           <select id="s_program" class="form-control">
             <option value="">— Select Level —</option>
             <option>Undergraduate (BS)</option>
@@ -1049,13 +1066,6 @@
 
     <div class="filter-bar">
       <input type="text" id="boardSearch" placeholder="🔍 Search title or description..." oninput="renderPublicBoard()">
-      <select id="boardStatusFilter" onchange="renderPublicBoard()">
-        <option value="All">All Statuses</option>
-        <option>Pending</option>
-        <option>In Review</option>
-        <option>Resolved</option>
-        <option>Rejected</option>
-      </select>
       <select id="boardCatFilter" onchange="renderPublicBoard()">
         <option value="All">All Categories</option>
         <option>Academic Issues</option>
@@ -1691,7 +1701,6 @@
 
   async function renderPublicBoard() {
     await checkServer();
-    const status = document.getElementById('boardStatusFilter').value;
     const cat = document.getElementById('boardCatFilter').value;
     const search = (document.getElementById('boardSearch').value || '').trim().toLowerCase();
 
@@ -1700,7 +1709,6 @@
       try {
         const params = new URLSearchParams();
         params.set('public_only', 'true');
-        if (status !== 'All') params.set('status', status);
         if (cat !== 'All') params.set('category', cat);
         const res = await fetch('/api/public/complaints?' + params.toString());
         if (res.ok) {
@@ -1712,7 +1720,6 @@
 
     if (!db.length && !isServerAvailable) {
       db = getLocalDB().filter(c => c.public_visible !== false);
-      if (status !== 'All') db = db.filter(c => c.status === status);
       if (cat !== 'All') db = db.filter(c => c.category === cat);
     }
 
@@ -1736,7 +1743,7 @@
     grid.innerHTML = db.map(c => {
       const who = c.show_name_publicly && c.student_name ? escapeHtml(c.student_name) : 'Anonymous Student';
       return '<div class="board-card" onclick="openBoardDetail(\'' + c.ticket_id + '\')">' +
-        '<div class="board-top"><span class="board-ticket">' + c.ticket_id + '</span>' + getStatusBadge(c.status) + '</div>' +
+        '<div class="board-top"><span class="board-ticket">' + c.ticket_id + '</span></div>' +
         '<h4>' + escapeHtml(c.title) + '</h4>' +
         '<div class="board-desc">' + escapeHtml(c.description) + '</div>' +
         '<div class="board-meta">' +
@@ -1759,8 +1766,7 @@
       '<div class="modal-meta-item"><div class="lbl">Submitted By</div><div class="val">' + who + '</div></div>' +
       '<div class="modal-meta-item"><div class="lbl">Department</div><div class="val">' + escapeHtml(c.department || '—') + '</div></div>' +
       '<div class="modal-meta-item"><div class="lbl">Category</div><div class="val">' + escapeHtml(c.category) + '</div></div>' +
-      '<div class="modal-meta-item"><div class="lbl">Submitted</div><div class="val">' + formatDate(c.created_at) + '</div></div>' +
-      '<div class="modal-meta-item"><div class="lbl">Status</div><div class="val">' + getStatusBadge(c.status) + '</div></div>';
+      '<div class="modal-meta-item"><div class="lbl">Submitted</div><div class="val">' + formatDate(c.created_at) + '</div></div>';
 
     document.getElementById('boardModalDesc').textContent = c.description;
 
@@ -1910,7 +1916,10 @@
 
     const recent = db.slice(0, 5);
     allAdminComplaints = db;
-    document.getElementById('adminRecentTable').innerHTML = buildAdminTable(recent);
+    document.getElementById('adminRecentTable').innerHTML =
+      '<div class="table-wrap"><table>' +
+      '<thead><tr><th>Ticket ID</th><th>Student</th><th>Category</th><th>Title</th><th>Status</th><th>Priority</th><th>Public?</th><th>Date</th><th>Action</th></tr></thead>' +
+      '<tbody>' + buildAdminTable(recent) + '</tbody></table></div>';
   }
 
   async function renderAdminTable() {
