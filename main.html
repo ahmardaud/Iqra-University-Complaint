@@ -635,78 +635,6 @@
     .login-card h2 { font-size: 22px; font-weight: 800; color: var(--iu-navy); margin-bottom: 6px; }
     .login-card p { color: #7F8C8D; font-size: 14px; margin-bottom: 28px; }
 
-    /* ===================== TRACK RESULT ===================== */
-    .track-result { display: none; }
-
-    .track-meta-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-bottom: 20px;
-    }
-
-    .track-meta-item {
-      background: #F8FAFC;
-      padding: 14px;
-      border-radius: 9px;
-      border: 1px solid #E8ECF0;
-    }
-    .track-meta-item .label {
-      font-size: 11px;
-      font-weight: 700;
-      color: #95A5A6;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      margin-bottom: 4px;
-    }
-    .track-meta-item .value { font-size: 14px; font-weight: 600; color: var(--iu-dark); }
-
-    /* ===================== PROGRESS STEPS ===================== */
-    .progress-steps {
-      display: flex;
-      align-items: center;
-      margin: 24px 0;
-      gap: 0;
-    }
-
-    .step {
-      flex: 1;
-      text-align: center;
-      position: relative;
-    }
-    .step::before {
-      content: '';
-      position: absolute;
-      top: 17px;
-      right: -50%;
-      width: 100%;
-      height: 2px;
-      background: #E8ECF0;
-      z-index: 0;
-    }
-    .step:last-child::before { display: none; }
-
-    .step-dot {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: #E8ECF0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 8px;
-      font-size: 16px;
-      position: relative;
-      z-index: 1;
-      transition: all 0.3s;
-    }
-    .step-dot.active { background: var(--iu-green); color: white; box-shadow: 0 4px 12px rgba(39,174,96,0.4); }
-    .step-dot.current { background: var(--iu-gold); color: white; box-shadow: 0 4px 12px rgba(243,156,18,0.4); }
-
-    .step-label { font-size: 11px; font-weight: 600; color: #95A5A6; text-transform: uppercase; letter-spacing: 0.5px; }
-    .step-label.active { color: var(--iu-green); }
-    .step-label.current { color: var(--iu-gold); }
-
     /* ===================== SECTION TITLE ===================== */
     .section-title {
       font-size: 22px;
@@ -757,7 +685,6 @@
       .sidebar { width: 100%; }
       .iu-hero h2 { font-size: 28px; }
       .form-row { grid-template-columns: 1fr; }
-      .track-meta-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 600px) {
@@ -818,7 +745,7 @@
 <!-- ============================= HEADER ============================= -->
 <header class="iu-header" id="mainHeader">
   <div class="disclaimer-bar">
-    ⚠️ <strong>Independent student project</strong> — built and run by a student, not by Iqra University's administration or IT department. Not an official university system.
+    ⚠️ <strong>Independent project</strong> — Not run by Iqra University's administration or IT department. Not an official university system.
   </div>
   <div class="iu-header-top">
     <div class="iu-logo-section" onclick="navigate('home')">
@@ -832,7 +759,6 @@
       <a id="nav-home" class="active" onclick="navigate('home')">🏠 Home</a>
       <a id="nav-submit" class="btn-submit" onclick="navigate('submit')">📝 Submit Complaint</a>
       <a id="nav-board" onclick="navigate('board')">📢 Public Board</a>
-      <a id="nav-track" onclick="navigate('track')">🔍 Track Status</a>
       <a id="nav-admin" onclick="navigate('admin')">🔐 Admin</a>
     </nav>
   </div>
@@ -842,13 +768,12 @@
 <div id="page-home" class="page active">
   <div class="iu-hero">
     <div class="iu-hero-content animate-in">
-      <div class="iu-badge">Student-Run · Not Affiliated With University Admin</div>
+      <div class="iu-badge">Not Affiliated With IQRA University Admin</div>
       <h2>Voice Your Concerns,<br>Make Them Impossible to Ignore</h2>
-      <p>Submit a complaint, track it with a private ticket ID, and — if you choose — let it appear on the public board where every student can see it. Real pressure comes from visibility.</p>
+      <p>Submit a complaint and — if you choose — let it appear on the public board where every student can see it. Real pressure comes from visibility.</p>
       <div class="hero-btns">
         <button class="btn btn-primary-iu" onclick="navigate('submit')">📝 Submit a Complaint</button>
         <button class="btn btn-outline-white" onclick="navigate('board')">📢 View Public Board</button>
-        <button class="btn btn-outline-white" onclick="navigate('track')">🔍 Track My Complaint</button>
       </div>
     </div>
   </div>
@@ -867,12 +792,7 @@
         <p>Browse complaints other students chose to make public. Names and contact details stay hidden unless the student opted to share them.</p>
         <button class="action-btn" onclick="navigate('board')">View Board →</button>
       </div>
-      <div class="info-item">
-        <div class="icon">🔍</div>
-        <h3>Track Status</h3>
-        <p>Use your unique Ticket ID received after submission to check the real-time status of your complaint.</p>
-        <button class="action-btn" onclick="navigate('track')">Track Complaint →</button>
-      </div>
+      
     </div>
 
     <div class="section-title">
@@ -1042,16 +962,14 @@
   <div class="modal" style="max-width:460px;text-align:center;">
     <div style="font-size:56px;margin-bottom:14px;">✅</div>
     <h3 style="font-size:20px;font-weight:800;color:var(--iu-navy);margin-bottom:8px;">Complaint Submitted!</h3>
-    <p style="color:#7F8C8D;margin-bottom:20px;font-size:14px;">Your complaint has been stored safely. Keep your Ticket ID to track status.</p>
+    <p style="color:#7F8C8D;margin-bottom:20px;font-size:14px;">Your complaint has been stored safely.</p>
     <div class="ticket-box">
       <p>Your Ticket ID</p>
       <div class="ticket-id" id="newTicketId">—</div>
-      <p style="font-size:12px;">Use this to track your complaint</p>
       <button class="copy-btn" onclick="copyTicket()">📋 Copy Ticket ID</button>
     </div>
     <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
       <button class="btn btn-blue" onclick="closeSuccessModal()">Done</button>
-      <button class="btn btn-outline" onclick="goTrack()">🔍 Track This Complaint</button>
     </div>
   </div>
 </div>
@@ -1103,64 +1021,6 @@
       <p style="font-size:11px;color:#95A5A6;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px;">Official Response</p>
       <p id="boardModalNotes" style="background:#EAFAF1;padding:14px;border-radius:9px;border-left:3px solid var(--iu-green);line-height:1.75;font-size:14px;color:#196F3D;"></p>
     </div>
-  </div>
-</div>
-
-<!-- ============================= TRACK PAGE ============================= -->
-<div id="page-track" class="page">
-  <div class="container" style="padding-top:40px;padding-bottom:60px;max-width:760px;">
-    <div class="section-title">🔍 Track Your Complaint</div>
-
-    <div class="card animate-in">
-      <div class="card-title">🎫 Enter Ticket ID</div>
-      <div style="display:flex;gap:12px;flex-wrap:wrap;">
-        <input type="text" id="trackInput" class="form-control" placeholder="e.g. IUC-20260001" style="flex:1;"
-               onkeydown="if(event.key==='Enter') trackComplaint()">
-        <button class="btn btn-blue" onclick="trackComplaint()">🔍 Track</button>
-      </div>
-    </div>
-
-    <div id="trackResult" class="track-result animate-in" style="margin-top:24px;">
-      <div class="ticket-box" id="trackTicketBox">
-        <p>Ticket ID</p>
-        <div class="ticket-id" id="trackTicketId">—</div>
-        <div id="trackStatusBadge" style="margin-top:8px;"></div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">📋 Complaint Information</div>
-
-        <!-- Progress Steps -->
-        <div class="progress-steps" id="progressSteps">
-          <div class="step">
-            <div class="step-dot" id="step-submitted">📤</div>
-            <div class="step-label" id="step-label-submitted">Submitted</div>
-          </div>
-          <div class="step">
-            <div class="step-dot" id="step-review">🔍</div>
-            <div class="step-label" id="step-label-review">In Review</div>
-          </div>
-          <div class="step">
-            <div class="step-dot" id="step-resolved">✅</div>
-            <div class="step-label" id="step-label-resolved">Resolved</div>
-          </div>
-        </div>
-
-        <div class="track-meta-grid" id="trackMeta"></div>
-
-        <div style="margin-bottom:16px;">
-          <p style="font-size:11px;color:#95A5A6;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px;">Description</p>
-          <p id="trackDesc" style="background:#F8FAFC;padding:14px;border-radius:9px;border-left:3px solid var(--iu-blue);line-height:1.75;font-size:14px;"></p>
-        </div>
-
-        <div id="trackAdminNotes" style="display:none;">
-          <p style="font-size:11px;color:#95A5A6;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px;">Admin Response</p>
-          <p id="trackNotesText" style="background:#EAFAF1;padding:14px;border-radius:9px;border-left:3px solid var(--iu-green);line-height:1.75;font-size:14px;color:#196F3D;"></p>
-        </div>
-      </div>
-    </div>
-
-    <div id="trackError" style="display:none;margin-top:20px;"></div>
   </div>
 </div>
 
@@ -1385,9 +1245,9 @@
 
 <!-- ============================= FOOTER ============================= -->
 <footer class="iu-footer">
-  <p>🎓 <strong>Independent Student Project</strong> — inspired by Iqra University, Chak Shahzad Campus, Islamabad</p>
+  <p>🎓 <strong>Independent Project</strong> — inspired by Iqra University, Chak Shahzad Campus, Islamabad</p>
   <p>Not operated by or affiliated with Iqra University's administration. Complaint Portal &copy; 2026</p>
-  <p id="footerStorageMode" style="margin-top:8px;font-size:12px;opacity:0.6;">💾 Connected to PC Storage (complaints.db SQLite)</p>
+  <p id="footerStorageMode" style="font-size:12px;color:#95A5A6;margin-top:6px;"></p>
 </footer>
 
 <!-- ============================= JAVASCRIPT ============================= -->
@@ -1408,18 +1268,18 @@
       if (res.ok) {
         isServerAvailable = true;
         const badge = document.getElementById('dbModeBadge');
-        badge.className = 'db-status-badge db-online';
-        badge.textContent = '🟢 PC Storage Active (SQLite)';
-        document.getElementById('footerStorageMode').textContent = '💾 Stored in PC File System (complaints.db)';
+        if (badge) { badge.className = 'db-status-badge db-online'; badge.textContent = '🟢 PC Storage Active (SQLite)'; }
+        const footer = document.getElementById('footerStorageMode');
+        if (footer) footer.textContent = '💾 Stored in PC File System (complaints.db)';
         return true;
       }
     } catch(e) { }
 
     isServerAvailable = false;
     const badge = document.getElementById('dbModeBadge');
-    badge.className = 'db-status-badge db-offline';
-    badge.textContent = '🟡 Browser Storage Mode';
-    document.getElementById('footerStorageMode').textContent = '💾 Offline Browser Storage Active';
+    if (badge) { badge.className = 'db-status-badge db-offline'; badge.textContent = '🟡 Browser Storage Mode'; }
+    const footer = document.getElementById('footerStorageMode');
+    if (footer) footer.textContent = '💾 Offline Browser Storage Active';
     return false;
   }
 
@@ -1518,12 +1378,12 @@
     const showName = document.getElementById('s_show_name').checked;
 
     const payload = {
-      student_name: name,
-      student_id: document.getElementById('s_id').value.trim(),
+      student_name: name || 'Anonymous Student',
+      student_id: batch,
       student_email: document.getElementById('s_email').value.trim(),
       student_phone: document.getElementById('s_phone').value.trim(),
       department: dept,
-      program: document.getElementById('s_program').value,
+      program: program,
       category: cat,
       priority: document.getElementById('c_priority').value || 'Medium',
       title: title,
@@ -1575,16 +1435,6 @@
     document.getElementById('successModal').classList.remove('active');
   }
 
-  function goTrack() {
-    closeSuccessModal();
-    const ticket = document.getElementById('newTicketId').textContent;
-    navigate('track');
-    setTimeout(() => {
-      document.getElementById('trackInput').value = ticket;
-      trackComplaint();
-    }, 100);
-  }
-
   function copyTicket() {
     const t = document.getElementById('newTicketId').textContent;
     navigator.clipboard.writeText(t).then(() => {
@@ -1593,109 +1443,6 @@
       setTimeout(() => btn.textContent = '📋 Copy Ticket ID', 2000);
     }).catch(() => {
       prompt('Copy your Ticket ID:', t);
-    });
-  }
-
-  async function trackComplaint() {
-    const input = document.getElementById('trackInput').value.trim().toUpperCase();
-    const errorEl = document.getElementById('trackError');
-    const resultEl = document.getElementById('trackResult');
-
-    errorEl.style.display = 'none';
-    resultEl.style.display = 'none';
-
-    if (!input) {
-      errorEl.innerHTML = '<div class="alert alert-warning">⚠️ Please enter a Ticket ID</div>';
-      errorEl.style.display = 'block';
-      return;
-    }
-
-    let complaint = null;
-
-    await checkServer();
-    if (isServerAvailable) {
-      try {
-        const res = await fetch('/api/track/' + encodeURIComponent(input));
-        if (res.ok) {
-          const json = await res.json();
-          if (json.success) complaint = json.complaint;
-        }
-      } catch(e){}
-    }
-
-    if (!complaint) {
-      const db = getLocalDB();
-      complaint = db.find(x => x.ticket_id.toUpperCase() === input);
-    }
-
-    if (!complaint) {
-      errorEl.innerHTML = '<div class="alert alert-error">❌ No complaint found with Ticket ID: <strong>' + input + '</strong></div>';
-      errorEl.style.display = 'block';
-      return;
-    }
-
-    document.getElementById('trackTicketId').textContent = complaint.ticket_id;
-    document.getElementById('trackStatusBadge').innerHTML = getStatusBadge(complaint.status);
-    updateProgressSteps(complaint.status);
-
-    document.getElementById('trackMeta').innerHTML =
-      metaItem('Student', complaint.student_name) +
-      metaItem('Student ID', complaint.student_id || '—') +
-      metaItem('Department', complaint.department || '—') +
-      metaItem('Category', complaint.category) +
-      metaItem('Priority', getPriorityBadge(complaint.priority), true) +
-      metaItem('Submitted', formatDate(complaint.created_at)) +
-      metaItem('Last Updated', formatDate(complaint.updated_at)) +
-      metaItem('Status', getStatusBadge(complaint.status), true);
-
-    document.getElementById('trackDesc').textContent = complaint.description;
-
-    const notesEl = document.getElementById('trackAdminNotes');
-    if (complaint.admin_notes) {
-      document.getElementById('trackNotesText').textContent = complaint.admin_notes;
-      notesEl.style.display = 'block';
-    } else {
-      notesEl.style.display = 'none';
-    }
-
-    resultEl.style.display = 'block';
-    resultEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
-  function metaItem(label, value, isHtml) {
-    return '<div class="track-meta-item"><div class="label">' + label + '</div><div class="value">' + (isHtml ? value : escapeHtml(String(value || '—'))) + '</div></div>';
-  }
-
-  function updateProgressSteps(status) {
-    const statuses = ['submitted', 'review', 'resolved'];
-    const statusMap = { 'Pending': 0, 'In Review': 1, 'Resolved': 2, 'Rejected': 2 };
-    const currentIdx = statusMap[status] ?? 0;
-
-    statuses.forEach((s, i) => {
-      const dot = document.getElementById('step-' + s);
-      const label = document.getElementById('step-label-' + s);
-      dot.classList.remove('active', 'current');
-      label.classList.remove('active', 'current');
-
-      if (status === 'Rejected' && i === 2) {
-        dot.textContent = '❌';
-        dot.classList.add('current');
-        label.textContent = 'Rejected';
-        label.classList.add('current');
-      } else if (i < currentIdx) {
-        dot.classList.add('active');
-        label.classList.add('active');
-        dot.textContent = ['📤','🔍','✅'][i];
-        label.textContent = ['Submitted','In Review','Resolved'][i];
-      } else if (i === currentIdx) {
-        dot.classList.add('current');
-        label.classList.add('current');
-        dot.textContent = ['📤','🔍','✅'][i];
-        label.textContent = ['Submitted','In Review','Resolved'][i];
-      } else {
-        dot.textContent = ['📤','🔍','✅'][i];
-        label.textContent = ['Submitted','In Review','Resolved'][i];
-      }
     });
   }
 
@@ -1745,7 +1492,7 @@
     grid.innerHTML = db.map(c => {
       const who = c.show_name_publicly && c.student_name ? escapeHtml(c.student_name) : 'Anonymous Student';
       return '<div class="board-card" onclick="openBoardDetail(\'' + c.ticket_id + '\')">' +
-        '<div class="board-top"><span class="board-ticket">' + c.ticket_id + '</span></div>' +
+        '<div class="board-top"><span class="board-ticket">' + c.ticket_id + '</span>' + getStatusBadge(c.status) + '</div>' +
         '<h4>' + escapeHtml(c.title) + '</h4>' +
         '<div class="board-desc">' + escapeHtml(c.description) + '</div>' +
         '<div class="board-meta">' +
@@ -1768,7 +1515,8 @@
       '<div class="modal-meta-item"><div class="lbl">Submitted By</div><div class="val">' + who + '</div></div>' +
       '<div class="modal-meta-item"><div class="lbl">Department</div><div class="val">' + escapeHtml(c.department || '—') + '</div></div>' +
       '<div class="modal-meta-item"><div class="lbl">Category</div><div class="val">' + escapeHtml(c.category) + '</div></div>' +
-      '<div class="modal-meta-item"><div class="lbl">Submitted</div><div class="val">' + formatDate(c.created_at) + '</div></div>';
+      '<div class="modal-meta-item"><div class="lbl">Submitted</div><div class="val">' + formatDate(c.created_at) + '</div></div>' +
+      '<div class="modal-meta-item"><div class="lbl">Status</div><div class="val">' + getStatusBadge(c.status) + '</div></div>';
 
     document.getElementById('boardModalDesc').textContent = c.description;
 
@@ -1918,10 +1666,7 @@
 
     const recent = db.slice(0, 5);
     allAdminComplaints = db;
-    document.getElementById('adminRecentTable').innerHTML =
-      '<div class="table-wrap"><table>' +
-      '<thead><tr><th>Ticket ID</th><th>Student</th><th>Category</th><th>Title</th><th>Status</th><th>Priority</th><th>Public?</th><th>Date</th><th>Action</th></tr></thead>' +
-      '<tbody>' + buildAdminTable(recent) + '</tbody></table></div>';
+    document.getElementById('adminRecentTable').innerHTML = buildAdminTable(recent);
   }
 
   async function renderAdminTable() {
