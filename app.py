@@ -145,7 +145,7 @@ def get_stats():
 def submit_complaint():
     data = request.json or {}
     
-    required = ['student_name', 'department', 'category', 'title', 'description']
+    required = ['student_id', 'department', 'category', 'title', 'description']
     for field in required:
         if not data.get(field):
             return jsonify({'success': False, 'error': f'Field {field} is required'}), 400

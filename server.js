@@ -137,7 +137,7 @@ app.get('/api/stats', (req, res) => {
 
 app.post('/api/complaints', (req, res) => {
     const data = req.body || {};
-    const required = ['student_name', 'department', 'category', 'title', 'description'];
+    const required = ['student_id', 'department', 'category', 'title', 'description'];
     for (const field of required) {
         if (!data[field]) {
             return res.status(400).json({ success: false, error: `Field ${field} is required` });

@@ -1499,13 +1499,15 @@
 
   async function submitComplaint() {
     const name = document.getElementById('s_name').value.trim();
+    const batch = document.getElementById('s_id').value.trim();
     const dept = document.getElementById('s_dept').value;
+    const program = document.getElementById('s_program').value;
     const cat  = document.getElementById('c_category').value;
     const title = document.getElementById('c_title').value.trim();
     const desc = document.getElementById('c_desc').value.trim();
     const alertEl = document.getElementById('submitAlert');
 
-    if (!name || !dept || !cat || !title || !desc) {
+    if (!batch || !dept || !program || !cat || !title || !desc) {
       alertEl.innerHTML = '<div class="alert alert-error">⚠️ Please fill in all required fields marked with *</div>';
       alertEl.style.display = 'block';
       alertEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
