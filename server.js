@@ -9,13 +9,9 @@ app.use(express.json());
 app.use(express.static(__dirname));
 
 const DB_PATH = path.join(__dirname, 'complaints.db');
-
-function getDb() {
-    return new sqlite3.Database(DB_PATH);
-}
+const db = new sqlite3.Database(DB_PATH);
 
 function initDb() {
-    const db = getDb();
     db.serialize(() => {
         // Complaints table
         db.run(`
@@ -104,7 +100,6 @@ function initDb() {
             }
         });
     });
-    db.close();
 }
 
 // Routes
@@ -113,9 +108,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/api/stats', (req, res) => {
-    const db = getDb();
     db.all("SELECT status, category FROM complaints", [], (err, rows) => {
-        db.close();
         if (err) return res.status(500).json({ success: false, error: err.message });
 
         const total = rows.length;
@@ -144,9 +137,8 @@ app.post('/api/complaints', (req, res) => {
         }
     }
 
-    const db = getDb();
     db.get('SELECT COUNT(*) as c FROM complaints', [], (err, row) => {
-        if (err) { db.close(); return res.status(500).json({ success: false, error: err.message }); }
+        if (err) { return res.status(500).json({ success: false, error: err.message }); }
         
         const count = (row ? row.c : 0) + 1;
         const ticketId = `IUC-${new Date().getFullYear()}${String(count).padStart(4, '0')}`;
@@ -163,7 +155,7 @@ app.post('/api/complaints', (req, res) => {
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending', '', ?, ?, ?, ?)
         `, [
             ticketId,
-            data.student_name,
+            data.student_name || 'Anonymous Student',
             data.student_id || '',
             data.student_email || '',
             data.student_phone || '',
@@ -179,7 +171,6 @@ app.post('/api/complaints', (req, res) => {
             now,
             now
         ], function(err2) {
-            db.close();
             if (err2) return res.status(500).json({ success: false, error: err2.message });
 
             res.json({
@@ -212,18 +203,14 @@ app.get('/api/public/complaints', (req, res) => {
     }
     query += ' ORDER BY id DESC';
 
-    const db = getDb();
     db.all(query, params, (err, rows) => {
-        db.close();
         if (err) return res.status(500).json({ success: false, error: err.message });
         res.json({ success: true, complaints: rows });
     });
 });
 
 app.get('/api/track/:ticket_id', (req, res) => {
-    const db = getDb();
     db.get('SELECT * FROM complaints WHERE UPPER(ticket_id) = UPPER(?)', [req.params.ticket_id], (err, row) => {
-        db.close();
         if (err || !row) {
             return res.status(404).json({ success: false, error: 'Ticket ID not found' });
         }
@@ -233,9 +220,7 @@ app.get('/api/track/:ticket_id', (req, res) => {
 
 app.post('/api/admin/login', (req, res) => {
     const { username, password } = req.body || {};
-    const db = getDb();
     db.get('SELECT * FROM admin_users WHERE username = ? AND password = ?', [username, password], (err, row) => {
-        db.close();
         if (row) {
             res.json({ success: true, token: 'valid-admin-session' });
         } else {
@@ -264,9 +249,7 @@ app.get('/api/admin/complaints', (req, res) => {
     }
     query += ' ORDER BY id DESC';
 
-    const db = getDb();
     db.all(query, params, (err, rows) => {
-        db.close();
         if (err) return res.status(500).json({ success: false, error: err.message });
         res.json({ success: true, complaints: rows });
     });
@@ -276,7 +259,6 @@ app.put('/api/admin/complaints/:id', (req, res) => {
     const { status, priority, admin_notes, public_visible } = req.body || {};
     const now = new Date().toISOString();
 
-    const db = getDb();
     const pubVal = public_visible === false ? 0 : 1;
 
     db.run(`
@@ -284,7 +266,6 @@ app.put('/api/admin/complaints/:id', (req, res) => {
         SET status = ?, priority = ?, admin_notes = ?, public_visible = ?, updated_at = ?
         WHERE id = ?
     `, [status, priority, admin_notes || '', pubVal, now, req.params.id], function(err) {
-        db.close();
         if (err || this.changes === 0) {
             return res.status(404).json({ success: false, error: 'Complaint not found' });
         }
@@ -293,9 +274,7 @@ app.put('/api/admin/complaints/:id', (req, res) => {
 });
 
 app.delete('/api/admin/complaints/:id', (req, res) => {
-    const db = getDb();
     db.run('DELETE FROM complaints WHERE id = ?', [req.params.id], function(err) {
-        db.close();
         if (err || this.changes === 0) {
             return res.status(404).json({ success: false, error: 'Complaint not found' });
         }
@@ -305,14 +284,11 @@ app.delete('/api/admin/complaints/:id', (req, res) => {
 
 app.post('/api/admin/change-password', (req, res) => {
     const { current_password, new_password } = req.body || {};
-    const db = getDb();
     db.get('SELECT * FROM admin_users WHERE username = ? AND password = ?', ['admin', current_password], (err, row) => {
         if (!row) {
-            db.close();
             return res.status(400).json({ success: false, error: 'Current password incorrect' });
         }
         db.run('UPDATE admin_users SET password = ? WHERE username = ?', [new_password, 'admin'], (err2) => {
-            db.close();
             res.json({ success: true, message: 'Password updated successfully' });
         });
     });
